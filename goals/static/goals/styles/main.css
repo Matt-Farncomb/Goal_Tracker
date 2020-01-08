@@ -1,0 +1,12 @@
+body {
+    background-color: white;
+}
+
+.inserted_goal {
+    display:none;
+}
+
+.parent_id_input {
+    display: none;
+}
+

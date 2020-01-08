@@ -1,0 +1,40 @@
+{% extends 'goals/base.html' %}
+{% block content %}
+{{ form.errors }}   
+{{ form.non_field_errors }}
+
+    <ul>       
+         <hr>      
+            {% for e in goals %}
+            <li id="inserted_goal_{{ e.count }}" class="goal {{ e.depth_id }}"> {{ e.hierarchy_id }} - {{ e.depth_id }}
+                <button class="btn btn-outline-success">tick</button> <!-- Will mark all sub classes as done -->
+                <button class="btn btn-outline-secondary">{{ e.content }} <!-- Will open up all sub classes -->
+                <button class="btn btn-outline-secondary">rename</button> <!-- Turn the above button into input field -->
+                <!-- Procedding int used to determine level in hierarchy -->
+                <button class="plus btn btn-outline-secondary">+</button> <!-- Add a new goal below, slightly indented, as input field -->
+                <button class="btn btn-outline-danger">-</button> <!-- Delete goal and all sub classes -->
+                <form class="inserted_goal" method="POST">
+                        {% csrf_token %}          
+                        <input type="text" name="new_goal">
+                        <input class="parent_id_input" type="number" name="parent_id" value="{{ e.id }}"> 
+                        <input class="h_id_input" type="number" name="hierarchy_id" value="{{ e.hierarchy_id }}">
+                        <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}">   
+                        <input type="submit"> 
+                </form>
+            </li>
+        {% empty %}
+        <form method="POST">
+            {% csrf_token %}          
+            <input type="text" name="new_goal">
+            <input class="parent_id_input" type="number" name="parent_id" value=0> 
+            <input class="h_id_input" type="number" name="hierarchy_id" value="{{ e.hierarchy_id }}">
+            <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}">  
+            <input type="submit"> 
+        </form>
+        {% endfor %}
+
+    </ul> 
+{% endblock content %}
+
+
+
