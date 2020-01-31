@@ -17,7 +17,6 @@
                         {% csrf_token %}          
                         <input type="text" name="new_goal">
                         <input class="parent_id_input" type="number" name="parent_id" value="{{ e.id }}"> 
-                        <input class="h_id_input" type="number" name="hierarchy_id" value="{{ e.hierarchy_id }}">
                         <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}">   
                         <input type="submit"> 
                 </form>

@@ -6,11 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const inserted_goals = document.querySelectorAll('.goal'); // each individual goal
 
-        //indent the goal to its corresponding depth
+        //indent all goals to their corresponding depth
         for (const goal of inserted_goals) {
-            const indent = goal.className;
-            let split_indent = indent.split(' ')[1];
-            goal.style.paddingLeft = split_indent * 2 + "em"
+            const goal_class = goal.className;
+            let goal_depth = goal_class.split(' ')[1];
+            goal.style.paddingLeft = goal_depth * 2 + "em"
         }   
 
         // reveals form to add new goal
@@ -23,4 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         }
 
+        //TODO:
+            //upon loading DOM, all goals of Depth > 0 will be made invisible unless revealed
+            // - need: all those elements hidden
+            //         clicking on parent goal reveals child goals
+            //              - name button adds display:block to class when clicked
+            //              - when clicked again, anme button removes display block
 });
