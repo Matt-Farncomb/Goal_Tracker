@@ -2,6 +2,10 @@ body {
     background-color: white;
 }
 
+ul {
+    list-style-type: none;
+}
+
 .inserted_goal {
     display:none;
 }
@@ -10,8 +14,37 @@ body {
     display: none;
 }
 
-/* .goal {
-    display: none;
-} */
+
+/* holds the main grid */
+.container {
+    display: grid;
+
+    grid-template-columns: repeat(20, 5%);
+    grid-template-rows:auto;
+    
+    border: 2px solid black;
+
+    background-color: aquamarine;
+    gap:2px;
+
+    height: 100%;
+    padding: 0px;
+  }
+
+/* generic class for each individual grid item */
+
+/* 
+TODO: each item will hold a small grid in it
+- these will reveal the little buttons when hovered over
+- they will each be little squarish puzzle pieces that linked to their sub goals like a puzzle piece
+- the classes showing color and the like will be generated in js
+ */
+
+.item {
+    /* padding: 2em; */
+    border: solid 2px black;
+    grid-column-start: 1;
+  grid-column-end: 2;
+}
 
 
