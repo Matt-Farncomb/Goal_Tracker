@@ -46,6 +46,7 @@ TODO: each item will hold a small grid in it
     grid-column-start: 1;
     grid-column-end: 2;
     background-color: blanchedalmond;
+    display: block;
 }
 
 

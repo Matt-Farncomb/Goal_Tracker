@@ -49,27 +49,37 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Clicked id is:" + id);
 
             //show all things that have the parent id matching this id
-
+            id_arr = [];
             for (const item of items) {
                 let child = item.className.split(' ')[1];
                 let child_id = child.split('_id_')[1];
+                
+                // adds the id of the element that will be hidden
+                // - it will then hide all elements that have this id as its parent
+                // - which will recursively hude all children of the original hidden element
+                if (!id_arr.includes(child_id)) {
+                    id_arr.push(child_id);
+                    console.log(id_arr);
+                 }
                 console.log("my child is:" + child_id);
-                if (child_id == id) {
-                    console.log("same")
-                    if (item.style.display == "block") {
-                        item.style.display = "none";
+                id_arr.forEach(e => {
+                    if (id == e) {
+                        if (item.style.display != "none") {
+                            item.style.display = "none"; 
+                        }
+                        else {
+                            console.log("was none")
+                            item.style.display = "block";
+                        }   
                     }
-                    else {
-                        item.style.display = "block";
-                    }
-                    
-                }
-            } 
-            
-            })
-        }
-
-        
+                });
+            }  
+        })
+    }    
 });
+
+//TODO: Function currenlty hides all children
+// - BUT if a child of a child is already hidden and then the parents parent is hidden...
+// - then th child of the child will be reveealed - because function basically does the opposite of its current state
 
 
