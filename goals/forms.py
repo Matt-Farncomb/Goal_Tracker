@@ -5,3 +5,6 @@ class GoalForm(forms.Form):
     parent_id = forms.IntegerField(label='parent_id')
     #hierarchy_id = forms.IntegerField(label='hierarchy_id')
     depth_id = forms.IntegerField(label='depth_id')
+
+class DeleteForm(forms.Form):
+    delete = forms.CharField(label='delete', max_length=100)

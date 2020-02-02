@@ -5,13 +5,16 @@
 
     <ul class="container">         
             {% for e in goals %}
-            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent_id }} item depth_{{ e.depth_id }}"> parent_id_{{ e.parent_id }}<!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
+            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent_id }} item depth_{{ e.depth_id }}"><!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
                 <button class="btn btn-outline-success">tick</button> <!-- Will mark all sub classes as done -->
                 <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn">{{ e.content }} <!-- Will open up all sub classes -->
                 <button class="btn btn-outline-secondary">rename</button> <!-- Turn the above button into input field -->
                 <!-- Procedding int used to determine level in hierarchy -->
                 <button class="plus btn btn-outline-secondary">+</button> <!-- Add a new goal below, slightly indented, as input field -->
-                <button class="btn btn-outline-danger">-</button> <!-- Delete goal and all sub classes -->
+                <form method="POST">
+                    {% csrf_token %} 
+                    <input class="btn btn-outline-danger" type="submit" name="delete" value="{{ e.id }}">-</button> <!-- Delete goal and all sub classes -->
+                </form>
                 <form class="inserted_goal" method="POST">
                         {% csrf_token %}            
                         <input type="text" name="new_goal">

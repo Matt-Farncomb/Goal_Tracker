@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
             item.style.gridColumnEnd = item_depth+5;
 
             console.log("item_depth:" + item_depth);
-            if (item_depth != 2) {
+            /* if (item_depth != 2) {
                 item.style.display = "none";
-            }
+            } */
             
             
         }   
@@ -69,14 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         }
 
-        //TODO:
-            //upon loading DOM, all goals of Depth > 0 will be made invisible unless revealed
-            // - need: all those elements hidden
-            //         clicking on parent goal reveals child goals
-            //              - name button adds display:block to class when clicked
-            //              - when clicked again, anme button removes display block
-
-            //
+        
 });
 
 

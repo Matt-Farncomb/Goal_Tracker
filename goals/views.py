@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .forms import GoalForm
+from .forms import GoalForm, DeleteForm
 from .models import Goal
 
 """ class Item:
@@ -10,7 +10,7 @@ from .models import Goal
 count = 0
 
 def goal(request):
-    
+
     global count
 
     context =  {
@@ -24,17 +24,12 @@ def goal(request):
     }
 
     """     base_item = Item(0, [])
-
     for e in context["goals"]:
         new_item = Item(e.pk, [])
         for x in context["goals"]:
             if e.pk == x.parent_id:
                 new_item.arr_of_items.append(x.parent_id) """
 
-
-
-
-    
     # assign each goal and its goal id to its parent id
     """ for e in context["goals"]:
         item = {
@@ -48,22 +43,29 @@ def goal(request):
         #print(ordered_context) """ 
 
     if request.method == 'POST':
-        form = GoalForm(request.POST)   
-        if form.is_valid():
-            new_goal = form.cleaned_data.get('new_goal')
-            parent_id = form.cleaned_data.get('parent_id')
+
+        goal_form = GoalForm(request.POST)
+        delete_form = DeleteForm(request.POST)
+
+        if goal_form.is_valid():
+            new_goal = goal_form.cleaned_data.get('new_goal')
+            parent_id = goal_form.cleaned_data.get('parent_id')
             #h_id = form.cleaned_data.get('hierarchy_id')
            
             # gets the depth id from depth of clciked on, then indents its depth 1 more
-            depth_id = form.cleaned_data.get('depth_id') + 1 
+            depth_id = goal_form.cleaned_data.get('depth_id') + 1 
             h_id = count
             count +=1
             new_goal = Goal(content=new_goal, parent_id=parent_id, hierarchy_id=h_id, depth_id=depth_id)
             new_goal.save()
-        else:
-            print(form.errors)
-    print(context)
+        elif delete_form.is_valid():
+            unwanted_goal_id = delete_form.cleaned_data.get('delete')
+            Goal.objects.filter(id=unwanted_goal_id).delete()
+        #else:
+            #print(goalForm.errors)
+    #print(context)
     #print(ordered_context)
+    #print("bob bob bob bob bob bob tebobst bob")
     return render(request, 'goals/goal.html', context)
 
 
