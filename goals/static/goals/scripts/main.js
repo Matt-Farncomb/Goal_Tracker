@@ -38,8 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.style.display = "none";
             } */
 
-            let new_goal = new Goal(item_id, parentId)
-            goal_arr.push(new_goal)    
+            let new_goal = new Goal(item_id, parentId, item)
+            goal_arr.push(new_goal) 
+ 
+            //console.log(new_goal.htmlElemment)
         }
         for (parent of goal_arr) {
             for (child of goal_arr) {
@@ -49,9 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             // prints out contents of goal class array
-            console.log("Children of " + parent.id + " are: ");
+            //console.log("Children of " + parent.id + " are: ");
                     for (child of parent.children) {
-                        console.log(child.id);
+                        //console.log(child.id);
                     } 
         }
 
@@ -61,11 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("clicked");
                 const inserted_goal = button.nextElementSibling.nextElementSibling;
                 inserted_goal.style.display = "block";
-                console.log(inserted_goal); 
+                //console.log(inserted_goal); 
             })  
         }
 
-        for (const btn of title_btns) {
+        /* for (const btn of title_btns) {
             btn.addEventListener('click', function(event) {  
             let id = btn.id.split('_')[1]; 
             
@@ -104,7 +106,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }  
         })
-    }    
+    } */
+    
+    for (const btn of title_btns) {
+        btn.addEventListener('click', function(event) {  
+        let id = btn.id.split('_')[1]; 
+        let  temp = [];
+        for (const parent of goal_arr) {
+            //console.log(parent);
+            if (id === parent.id) {  
+                console.log(parent.closed);
+                //parent.htmlElemment.style.display = "none";
+                hideElements(parent.children, parent.closed);
+                parent.closed = !parent.closed;
+                console.log(parent.closed);
+                
+                /* for (child of parent.children) {
+                    console.log("Children are:" + child.id);
+                    child.htmlElemment.style.display = "none";
+               } */
+            }
+            
+        }
+        
+       
+        let closing = false;
+
+        });
+    }
 });
 
 //TODO: Function currenlty hides all children
@@ -125,22 +154,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         id;
         parentId;
-        openStatus;
+        closed;
         children;
 
-        constructor(id, parentId) {
+        constructor(id, parentId, item) {
             this.id = id;
             this.parentId = parentId
-            this.openStatus = false;
+            this.closed = false; //staus for if all children are hidden or not - true is hidden
             this.children = []
+            this.htmlElemment = item;
         }
 
         close() {
-            this.openStatus = false;
+            this.closed = true;
         }
 
         open() {
-            this.openStatus = true;
+            this.closed = false;
         }
 
         addChild(newChild) {
@@ -150,6 +180,21 @@ document.addEventListener('DOMContentLoaded', () => {
         removeChildren(child) {
             //function to remove child
         }
+    }
+
+    //recursively hide/show all elements in arr
+    function hideElements(arr, closed) {
+        for (child of arr) {
+            if (closed) { // then open
+                child.htmlElemment.style.display = "block";    
+            }
+            else { // then close
+                child.htmlElemment.style.display = "none";
+            } 
+            if (child.children.length > 0) {
+                hideElements(child.children, closed);
+            }   
+       }
     }
 
 
