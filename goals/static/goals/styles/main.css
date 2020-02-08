@@ -49,4 +49,12 @@ TODO: each item will hold a small grid in it
     display: block;
 }
 
+#item-208 {
+    background-color: red !important;
+}
+
+.hidden {
+    display: none;
+}
+
 

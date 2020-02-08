@@ -15,13 +15,36 @@ def goal(request):
 
     context =  {
         #"goals":["kill all orcs", "don't die"]
-        "goals":Goal.objects.order_by("hierarchy_id")
+        "goals":Goal.objects.order_by("parent_id")
         #"goals":Goal.objects.order_by('hierarchy')
     }
 
-    ordered_context = {
-        "goals":{}
-    }
+    goals = Goal.objects.order_by("parent_id")
+
+    goal_arr = []
+
+    for e in context["goals"]:
+        #print(e.id)
+        new_goal = Goal_Item(e.id, e.parent_id)
+        goal_arr.append(new_goal)
+
+    for parent in goal_arr:
+        for child in goal_arr:
+            if parent.goal_id == child.parent_id:
+                parent.add_child(child)
+                #print(f" goal: {parent.goal_id}, parent:{child.parent_id}")
+        
+        """ for parent in goal_arr:
+        if (len(parent.children)> 0):
+            print(f"parent: {parent.goal_id}")
+            for child in parent.children:
+                print(f" goal: {child.goal_id}, parent:{child.parent_id}") """
+
+  
+
+
+ 
+
 
     """     base_item = Item(0, [])
     for e in context["goals"]:
@@ -50,7 +73,7 @@ def goal(request):
         if goal_form.is_valid():
             new_goal = goal_form.cleaned_data.get('new_goal')
             parent_id = goal_form.cleaned_data.get('parent_id')
-            #h_id = form.cleaned_data.get('hierarchy_id')
+            h_id = goal_form.cleaned_data.get('hierarchy_id') + 1
            
             # gets the depth id from depth of clciked on, then indents its depth 1 more
             depth_id = goal_form.cleaned_data.get('depth_id') + 1 
@@ -73,3 +96,13 @@ def goal(request):
 
 #to make a new h_id, you have to iterate through everything and look for all thingies with the same parent id
 # then count them and this new one gets the length +1 as its h id.
+
+class Goal_Item:
+
+    def __init__(self, goal_id, parent_id):
+        self.goal_id = goal_id
+        self.parent_id = parent_id
+        self.children = []
+
+    def add_child(self, child):
+        self.children.append(child)

@@ -3,8 +3,10 @@
 {{ form.errors }}   
 {{ form.non_field_errors }}
 
-    <ul class="container">         
+    <ul class="container"> 
+        <div id="testy"></div>       
             {% for e in goals %}
+
             <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent_id }} item depth_{{ e.depth_id }}"><!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
                 <button class="btn btn-outline-success">tick</button> <!-- Will mark all sub classes as done -->
                 <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn">{{ e.content }} <!-- Will open up all sub classes -->
@@ -15,10 +17,13 @@
                     {% csrf_token %} 
                     <input class="btn btn-outline-danger" type="submit" name="delete" value="{{ e.id }}">-</button> <!-- Delete goal and all sub classes -->
                 </form>
+                
                 <form class="inserted_goal" method="POST">
-                        {% csrf_token %}            
+                        {% csrf_token %}  
+                                
                         <input type="text" name="new_goal">
                         <input class="parent_id_input" type="number" name="parent_id" value="{{ e.id }}"> 
+                        <input class="h_id_input hidden" type="number" name="hierarchy_id" value="{{ e.hierarchy_id }}">
                         <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}">   
                         <input type="submit"> 
                 </form>
@@ -28,8 +33,8 @@
             {% csrf_token %}          
             <input type="text" name="new_goal">
             <input class="parent_id_input" type="number" name="parent_id" value=0> 
-            <input class="h_id_input" type="number" name="hierarchy_id" value="{{ e.hierarchy_id }}">
-            <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}">  
+            <input class="h_id_input hidden" type="number" name="hierarchy_id" value="0">
+            <input class="depth_id_input hidden" type="number" name="depth_id" value="0">  
             <input type="submit"> 
         </form>
         
