@@ -1,7 +1,12 @@
 from django.shortcuts import render
+from django.core.serializers import serialize
+from django.core.serializers.json import DjangoJSONEncoder
 
 from .forms import GoalForm, DeleteForm
 from .models import Goal
+
+
+import json
 
 """ class Item:
     def __init__(self, id, arr_of_items):
@@ -13,15 +18,24 @@ def goal(request):
 
     global count
 
+    #json_test = json.dumps(22)
+    test_goals = serialize('json', Goal.objects.order_by("parent_id"))
     context =  {
         #"goals":["kill all orcs", "don't die"]
-        "goals":Goal.objects.order_by("parent_id")
-        #"goals":Goal.objects.order_by('hierarchy')
+        "goals":Goal.objects.order_by("parent_id"),
+        "json_test":json.dumps(test_goals, cls=DjangoJSONEncoder)
     }
+
+    
+    test_goals_1 = Goal.objects.order_by("parent_id")
+
+    #context["json_test"] = json_test
 
     goals = Goal.objects.order_by("parent_id")
 
     goal_arr = []
+
+    
 
     for e in context["goals"]:
         #print(e.id)
@@ -34,13 +48,14 @@ def goal(request):
                 parent.add_child(child)
                 #print(f" goal: {parent.goal_id}, parent:{child.parent_id}")
         
-        """ for parent in goal_arr:
+    for parent in goal_arr:
         if (len(parent.children)> 0):
             print(f"parent: {parent.goal_id}")
             for child in parent.children:
-                print(f" goal: {child.goal_id}, parent:{child.parent_id}") """
+                print(f" goal: {child.goal_id}")
 
-  
+    
+    #context["json_test"] = json.dumps(test_goals)
 
 
  

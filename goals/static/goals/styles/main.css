@@ -37,7 +37,6 @@ ul {
 TODO: each item will hold a small grid in it
 - these will reveal the little buttons when hovered over
 - they will each be little squarish puzzle pieces that linked to their sub goals like a puzzle piece
-- the classes showing color and the like will be generated in js
  */
 
 .item {
@@ -47,10 +46,6 @@ TODO: each item will hold a small grid in it
     grid-column-end: 2;
     background-color: blanchedalmond;
     display: block;
-}
-
-#item-208 {
-    background-color: red !important;
 }
 
 .hidden {
