@@ -2,7 +2,7 @@ from django import forms
 
 class GoalForm(forms.Form):
     new_goal = forms.CharField(label='new_goal', max_length=100)
-    parent_id = forms.IntegerField(required=False, label='parent_id')
+    parent = forms.IntegerField(required=False, label='parent')
     hierarchy_id = forms.IntegerField(label='hierarchy_id')
     depth_id = forms.IntegerField(label='depth_id')
 

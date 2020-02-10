@@ -17,7 +17,7 @@
         <div id="testy"></div>       
             {% for e in goals %}
             
-            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent_id.id }} item depth_{{ e.depth_id }}">{{ e.parent_id.id }}<!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
+            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent.id }} item depth_{{ e.depth_id }}">{{ e.parent.id }}<!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
                 <button class="btn btn-outline-success">tick</button> <!-- Will mark all sub classes as done -->
                 <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn">{{ e.content }} <!-- Will open up all sub classes -->
                 <button class="btn btn-outline-secondary">rename</button> <!-- Turn the above button into input field -->
@@ -32,7 +32,7 @@
                         {% csrf_token %}  
                                 
                         <input type="text" name="new_goal">
-                        <input class="parent_id_input" type="number" name="parent_id" value="{{ e.id }}"> 
+                        <input class="parent_id_input" type="number" name="parent" value="{{ e.id }}"> 
                         <input class="h_id_input hidden" type="number" name="hierarchy_id" value="{{ e.hierarchy_id }}">
                         <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}">   
                         <input type="submit"> 
@@ -42,7 +42,7 @@
         <form method="POST">
             {% csrf_token %}          
             <input type="text" name="new_goal">
-            <input class="parent_id_input" type="number" name="parent_id" value=""> 
+            <input class="parent_id_input" type="number" name="parent" value=""> 
             <input class="h_id_input hidden" type="number" name="hierarchy_id" value="1">
             <input class="depth_id_input hidden" type="number" name="depth_id" value="1">  
             <input type="submit"> 
@@ -50,6 +50,17 @@
         
         {% endfor %}    
     </ul> 
+
+    {% for e in test %} 
+    <li>
+        <button>{{ e.model.id }}</button>
+        <button>{{ e.model.content }}</button>
+        <button>{{ e.model.parent.id }}</button>
+        <button>{{ e.model.hierarchy_id}}</button>
+        <button>{{ e.model.depth_id }}</button>
+    </li>
+        
+    {% endfor %}
 {% endblock content %}
 
 
