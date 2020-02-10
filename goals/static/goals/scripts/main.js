@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let child_order = 0; //used to set the css grid order of children when they are flattened
 
     console.log(typeof data);
-    console.log(data[1]);
+    console.log(data);
     
     class Goal {
 

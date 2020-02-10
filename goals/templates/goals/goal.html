@@ -1,4 +1,14 @@
 {% extends 'goals/base.html' %}
+{% block head %}
+<script type="text/javascript">
+   //this works because the is just like the normal template django thing
+    //converts string recieved from django template to object
+    //will then iterate thouogh this object like in main.js
+    //SHould link parent id with goal id with foreign_keys then will be easier (maybe) to build tree
+    let data = JSON.parse({{ json_test|safe }});
+</script>
+{% endblock head %}
+
 {% block content %}
 {{ form.errors }}   
 {{ form.non_field_errors }}
@@ -6,8 +16,8 @@
     <ul class="container"> 
         <div id="testy"></div>       
             {% for e in goals %}
-
-            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent_id }} item depth_{{ e.depth_id }}"><!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
+            
+            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent_id.id }} item depth_{{ e.depth_id }}">{{ e.parent_id.id }}<!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
                 <button class="btn btn-outline-success">tick</button> <!-- Will mark all sub classes as done -->
                 <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn">{{ e.content }} <!-- Will open up all sub classes -->
                 <button class="btn btn-outline-secondary">rename</button> <!-- Turn the above button into input field -->
@@ -32,9 +42,9 @@
         <form method="POST">
             {% csrf_token %}          
             <input type="text" name="new_goal">
-            <input class="parent_id_input" type="number" name="parent_id" value=0> 
-            <input class="h_id_input hidden" type="number" name="hierarchy_id" value="0">
-            <input class="depth_id_input hidden" type="number" name="depth_id" value="0">  
+            <input class="parent_id_input" type="number" name="parent_id" value=""> 
+            <input class="h_id_input hidden" type="number" name="hierarchy_id" value="1">
+            <input class="depth_id_input hidden" type="number" name="depth_id" value="1">  
             <input type="submit"> 
         </form>
         
