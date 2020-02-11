@@ -53,11 +53,10 @@
 
     {% for e in test %} 
     <li>
-        <button>{{ e.model.id }}</button>
-        <button>{{ e.model.content }}</button>
-        <button>{{ e.model.parent.id }}</button>
-        <button>{{ e.model.hierarchy_id}}</button>
-        <button>{{ e.model.depth_id }}</button>
+        <button>{{ e.goal.id }}</button>
+        <button>{{ e.goal.content }}</button>
+        <button>{{ e.goal.parent.id }}</button>
+        <button>{{ e.goal.depth_id }}</button>
     </li>
         
     {% endfor %}
