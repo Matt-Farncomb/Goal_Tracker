@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const items = document.querySelectorAll('.item'); // each individual item
     const title_btns = document.querySelectorAll('.title-btn'); // each individual title_btn
     let goal_arr = [];
-    let flattenedChildren = new Set();
-    let child_order = 0; //used to set the css grid order of children when they are flattened
+    //let flattenedChildren = new Set();
+    //let child_order = 0; //used to set the css grid order of children when they are flattened
 
     console.log(typeof data);
     console.log(data);
@@ -111,9 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   
     //now that children are assigned to correct parent, add them to the set with flattenedChildren
-    for (e of goal_arr) {
+
+    /* for (e of goal_arr) {
         flattenChildren(e);  
-    }
+    } */
 
     // reveals form to add new goal
     for (const button of add_goal_buttons) {
