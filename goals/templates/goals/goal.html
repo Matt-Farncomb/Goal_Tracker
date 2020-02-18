@@ -18,17 +18,21 @@
             {% for e in goals %}
             {% with e=e.goal %}
             
-            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent.id }} item depth_{{ e.depth_id }}">{{ e.parent.id }}<!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
-                <button class="btn btn-outline-success">tick</button> <!-- Will mark all sub classes as done -->
-                <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn">{{ e.content }} <!-- Will open up all sub classes -->
-                <button class="btn btn-outline-secondary">rename</button> <!-- Turn the above button into input field -->
-                <!-- Procedding int used to determine level in hierarchy -->
-                <button class="plus btn btn-outline-secondary">+</button> <!-- Add a new goal below, slightly indented, as input field -->
-                <form method="POST">
+            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent.id }} item depth_{{ e.depth_id }} inner-container"><!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
+                <button class="btn btn-outline-success tick">tick</button> <!-- Will mark all sub classes as done -->
+               
+                    <div class="top-tab-l"></div><div class="top-tab-r"></div>
+                    <!-- <div class="bottom-tab-l"></div><div class="bottom-tab-r"></div> -->
+              
+                
+                <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn  title">{{ e.content }} <!-- Will open up all sub classes -->
+                <!-- Procedding int used to determine level in hierarchy --> 
+                <button class="plus btn btn-outline-secondary plus">+</button> <!-- Add a new goal below, slightly indented, as input field -->
+                <form method="POST" class="cross">
                     {% csrf_token %} 
                     <input type="hidden" name="name" value="delete">
                     <input class="btn btn-outline-danger" type="submit" name="delete" value="{{ e.id }}">-</button> <!-- Delete goal and all sub classes -->
-                </form>
+                </form> 
                 
                 <form class="inserted_goal" method="POST">
                         {% csrf_token %}  

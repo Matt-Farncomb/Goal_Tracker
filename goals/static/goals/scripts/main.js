@@ -82,14 +82,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
+    let row_number = 1;
 
     //indent all items to their corresponding depth
     for (const item of items) {
+        
         const item_class = item.className;
         let item_depth = parseInt(item_class.split('depth_')[1]);
         item.style.gridColumnStart = item_depth;
         item.style.gridColumnEnd = item_depth+5;
+        item.style.gridRowStart = row_number;
+        let bob = getComputedStyle(item);
+        console.log(bob.gridRowStart)
+        console.log(row_number)
+        row_number++;
 
         let item_id = item.id.split(' ')[1];
         item_id = item_id.split('-')[1];
