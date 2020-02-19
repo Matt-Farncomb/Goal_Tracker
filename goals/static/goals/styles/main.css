@@ -6,9 +6,7 @@ ul {
     list-style-type: none;
 }
 
-.inserted_goal {
-    display:none;
-}
+
 
 .parent_id_input {
     display: none;
@@ -226,6 +224,23 @@ TODO: each item will hold a small grid in it
 
 .item:nth-of-type(even) {
     background-color:#7FACB5;
+}
 
+#goal-entry {
+    grid-column-start:1;
+    grid-column-end:10;
+    grid-row-start:3;
+    grid-row-end: 9;
 
+    display: none;
+    background-color: white;;
+}
 
+.inserted_goal {
+    padding-top: 2em;
+ }
+
+#content-input{
+    width: 80%;
+    margin-left: 10%;
+ }

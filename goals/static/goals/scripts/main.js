@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for (const button of add_goal_buttons) {
         button.addEventListener('click', function(event) {  
             const inserted_goal = button.nextElementSibling.nextElementSibling;
+            console.log(inserted_goal)
             inserted_goal.style.display = "block";
         })  
     }
