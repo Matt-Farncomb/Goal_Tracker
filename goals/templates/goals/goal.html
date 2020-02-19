@@ -19,24 +19,24 @@
             {% with e=e.goal %}
             
             <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent.id }} item depth_{{ e.depth_id }}"><!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
-                <div class="inner-container">
-                    <button class="btn btn-outline-success tick">tick</button> <!-- Will mark all sub classes as done -->
-                    {% if e.parent.id != None %} 
-                        <div class="top-tab-l"></div><div class="top-tab-r"></div>
-                        <!-- <div class="bottom-tab-l"></div><div class="bottom-tab-r"></div> -->
-                    {% endif %}
-                    
-                    <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn  title">{{ e.content }} <!-- Will open up all sub classes -->
-                    <!-- Procedding int used to determine level in hierarchy --> 
-                    <button class="plus btn btn-outline-secondary plus">+</button> <!-- Add a new goal below, slightly indented, as input field -->
-                    <form method="POST" class="cross">
+                
+                   
+                
+                   <!--  <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn  title">{{ e.content }}</button> -->
+            <div class="item-container">
+                <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn  title">{{ e.content }}</button>
+                   
+                <div class="button-container">
+                    <button class="btn btn-outline-success tick circle"><i class="fas fa-check"></i></button> <!-- Will mark all sub classes as done -->
+                    <button class="plus btn btn-outline-secondary plus circle">+</button> <!-- Add a new goal below, slightly indented, as input field -->
+                    <form method="POST" class="cross circle">
                         {% csrf_token %} 
                         <input type="hidden" name="name" value="delete">
-                        <button id="delete-button" type="submit" value="Submit" class="btn btn-outline-danger" >
+                        <button id="delete-button" type="submit" value="Submit" class="btn btn-outline-danger circle" >
                             <input type="number" name="delete" value="{{ e.id }}" hidden>-</input> <!-- Delete goal and all sub classes -->
                         </button>
                     </form> 
-                    <div id="goal-entry" >
+                    <div id="goal-entry">
                         <form class="inserted_goal" method="POST">
                                 {% csrf_token %}  
                                 <input type="hidden" name="name" value="not_initial">                
@@ -48,7 +48,11 @@
                         </form>
                     </div>
                 </div>
+            </div> 
+                <hr class="divider">
             </li>
+           
+            
         {% endwith %}
         {% empty %}
         <form method="POST">
