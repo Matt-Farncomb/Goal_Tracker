@@ -90,7 +90,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const item_class = item.className;
         let item_depth = parseInt(item_class.split('depth_')[1]);
         item.style.gridColumnStart = item_depth;
-        item.style.gridColumnEnd = item_depth+5;
+        item.style.gridColumnEnd = item_depth+5; 
+        
+            /* TODO:
+                - The buttons need to be a sperate item from the title
+                - This is so they can resice independantly
+                - The buttons always stay the same
+                - The text box for title changes according to its content
+            */
+
+
         item.style.gridRowStart = row_number;
         let bob = getComputedStyle(item);
         console.log(bob.gridRowStart)

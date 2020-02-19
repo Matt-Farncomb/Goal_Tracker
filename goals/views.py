@@ -17,7 +17,9 @@ def goal(request):
     ### --------------------------------- ###
 
     goals_query = Goal.objects.order_by("parent") 
-    matched_list = match_child_with_parent(goals_query)   
+    matched_list = match_child_with_parent(goals_query) 
+
+
 
     flattened_list = []
     
@@ -31,8 +33,12 @@ def goal(request):
 
     if request.method == 'POST':
 
+        #initital values
+        parent = None
+        depth_id = 1  
         posted_form = request.POST
         form_name = posted_form.get('name')
+        
         # delete selected item from database
         if form_name == "delete":
             delete_form = DeleteForm(posted_form)
@@ -53,7 +59,7 @@ def goal(request):
                     parent_id = goal_form.cleaned_data.get('parent')
                     # gets the depth id from depth of clicked on, then indents its depth 1 more
                     depth_id = goal_form.cleaned_data.get('depth_id') + 1 
-
+                    
                     for e in context["goals"]:
                         if e.goal.id == parent_id:
                             parent = e.goal
