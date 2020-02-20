@@ -1,3 +1,5 @@
+
+
 :root {
     --main-bg-color:#434A66;
     --local-white:antiquewhite;
@@ -7,10 +9,22 @@ body {
     background-color: var(--main-bg-color);
 }
 
-ul {
+li {
     list-style-type: none;
 }
 
+.navbar {
+    margin-left: 18%;
+    margin-right: 18%;
+
+}
+
+.nav-item {
+ 
+    padding:.5em 2em .25em 2em;
+}
+
+/* a { text-decoration: none; }  */
 
 
 .parent_id_input {
