@@ -52,7 +52,7 @@ def goal(request):
                 if initial_form.is_valid():
                     new_goal = initial_form.cleaned_data.get('first_goal')
             # add an extra item to database
-            elif form_name == "not_initial":
+            elif form_name == "new-goal":
                 goal_form = GoalForm(posted_form)
                 if goal_form.is_valid():
                     new_goal = goal_form.cleaned_data.get('new_goal')

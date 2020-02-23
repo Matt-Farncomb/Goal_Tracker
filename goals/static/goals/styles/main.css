@@ -210,3 +210,37 @@ TODO: each item will hold a small grid in it
  .disabled {
      opacity: 40%;
  }
+
+ .footer {
+    position: fixed;
+    bottom: 0;  
+    width: 40%;
+   
+
+    background-color:black !important;
+    padding-bottom: 2em;
+    
+   
+}
+
+footer {
+    position: fixed;
+    bottom: 0;  
+    width: 64%;
+    height: 100px;
+    z-index:-1;
+    /* background-color:black !important; */
+    margin-left: 18%;
+    margin-right: 18%;
+    
+}
+
+#new-goal-entry-label {
+    padding: 2.5em;
+    
+}
+
+#add-goal-input-box {
+    width: 1150px;
+    background-color:azure;
+}

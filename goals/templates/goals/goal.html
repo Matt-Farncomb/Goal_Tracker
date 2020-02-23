@@ -70,8 +70,33 @@
             <input type="submit"> 
         </form>
         
-        {% endfor %}    
+        {% endfor %}   
+       
     </ul> 
+   <!--  <footer class="navbar navbar-dark bg-dark">
+       <li class="sign-in nav-item navbar-nav"><a class="nav-link" href="#">New Goal</a></li>
+    </footer>  -->
+    <!-- <nav class="navbar navbar-dark bg-dark justify-content-between">
+        <a class="navbar-brand text-secondary">Add Goal</a>
+        <form id="new-goal-form" method="POST" class="form-inline">
+            {% csrf_token %}
+            <input type="hidden" name="name" value="initial">
+            <input id="add-goal-input-box" class="form-control mr-sm-2" type="text" placeholder="Add Goal" name="first_goal" aria-label="Search">
+            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">+</button>
+        </form>
+    </nav> -->
+    <nav class="navbar navbar-dark bg-dark justify-content-between">
+        <a class="navbar-brand text-secondary">Add Goal</a>
+        <form id="new-goal-form" class="form-inline" method="POST">
+            {% csrf_token %}  
+            <input type="hidden" name="name" value="new-goal">                
+            <input class="parent_id_input" type="number" name="parent" hidden> 
+            <input class="depth_id_input" type="number" name="depth_id" value="0" hidden>   
+            <input id="add-goal-input-box" class="form-control mr-sm-2" type="text" placeholder="Add Goal" name="new_goal" aria-label="Search">
+            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">+</button>
+        </form>
+    </nav>
+    
 {% endblock content %}
 
 

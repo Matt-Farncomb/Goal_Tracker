@@ -77,7 +77,38 @@ function disable(element) {
 
 function revealGoalForm(button) {
     const inserted_goal = button.nextElementSibling;
-    inserted_goal.style.display = "block";
+
+    //TODO: No longer actually 'reveal form'
+    // - Cursor will go jump into that text box
+    // - escaping out of text-box will cause box to revert back to normal no parent value
+
+    //get id
+    let parent = button.parentElement.parentElement.parentElement;
+    let parent_id = parent.id.split(' ')[1]; 
+    parent_id = parent_id.split('-')[1];
+    console.log("p_id: " + parent_id);
+
+    //get depth id
+    const item_class = parent.className;
+    let depth_id = parseInt(item_class.split('depth_')[1]);
+    console.log("depth_id: " + depth_id);
+
+    //get form
+    // - change form id and depth to necessary values
+    form = document.querySelector("#new-goal-form");
+
+    for (const child of form.children) {
+        if (child.name == "parent") {
+            child.setAttribute("value", parent_id);
+        }
+        else if (child.name == "depth_id") {
+            child.setAttribute("value", depth_id);
+        }
+    }
+    console.log(form.children[3]);
+    console.log(form.children[2]);
+
+    //jump cursor into text box
 }
 
 //when button is clicked on, hide/show all children
@@ -136,6 +167,7 @@ function alignItem(item, row_number) {
     item.style.gridColumnStart = item_depth;
     item.style.gridColumnEnd = item_depth+5; 
     item.style.gridRowStart = row_number.value;
+    /* item.classList.add("row-" + row_number.value) */
     row_number.value++;
     /* return row_number; */
 }
