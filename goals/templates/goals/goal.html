@@ -28,14 +28,22 @@
                    
                 <div class="button-container">
                     <button class="btn btn-outline-success tick circle"><i class="fas fa-check"></i></button> <!-- Will mark all sub classes as done -->
-                    <button class="plus btn btn-outline-secondary plus circle">+</button> <!-- Add a new goal below, slightly indented, as input field -->
-                    <form method="POST" class="cross circle">
+ <!--                    <form method="POST" class="tick circle">
+                        {% csrf_token %} 
+                        <input type="hidden" name="name" value="complete">
+                        <button class="btn btn-outline-success tick circle" type="submit" value="Submit" ><i class="fas fa-check"></i></button> 
+                            <input type="number" name="complete" value="{{ e.id }}" hidden>-</input> 
+                        </button>
+                    </form>  -->
+                    <form method="POST" class="cross circle" hidden>
                         {% csrf_token %} 
                         <input type="hidden" name="name" value="delete">
                         <button id="delete-button" type="submit" value="Submit" class="btn btn-outline-danger circle" >
                             <input type="number" name="delete" value="{{ e.id }}" hidden>-</input> <!-- Delete goal and all sub classes -->
                         </button>
                     </form> 
+                    <button class="plus btn btn-outline-secondary plus circle">+</button> <!-- Add a new goal below, slightly indented, as input field -->
+                   
                     <div id="goal-entry">
                         <form class="inserted_goal" method="POST">
                                 {% csrf_token %}  

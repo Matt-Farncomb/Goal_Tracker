@@ -132,8 +132,8 @@ TODO: each item will hold a small grid in it
 
 .cross {
     background-color: var(--local-white);
-    grid-column-start:3;
-    display: none;
+    grid-column-start:1;
+    /* display: none; */
 }
 
 #delete-button {
@@ -180,7 +180,7 @@ TODO: each item will hold a small grid in it
 }
 
 .inserted_goal {
-    padding-top: 2em;
+    /* padding-top: 2em; */
  }
 
 #content-input{
@@ -205,4 +205,8 @@ TODO: each item will hold a small grid in it
     display: grid;
     grid-template-columns: repeat(20, 5%);
     grid-template-rows:repeat(10, 10%);
+ }
+
+ .disabled {
+     opacity: 40%;
  }
