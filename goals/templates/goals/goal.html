@@ -18,7 +18,7 @@
             {% for e in goals %}
             {% with e=e.goal %}
             
-            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent.id }} item depth_{{ e.depth_id }}"><!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
+            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent.id }} item depth_{{ e.depth_id }} completed_{{ e.completed }}"><!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
                 
                    
                 
@@ -27,30 +27,28 @@
                 <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn  title">{{ e.content }}</button>
                    
                 <div class="button-container">
-                    <button class="btn btn-outline-success tick circle"><i class="fas fa-check"></i></button> <!-- Will mark all sub classes as done -->
- <!--                    <form method="POST" class="tick circle">
+                    <form method="POST" class="tick circle">
                         {% csrf_token %} 
-                        <input type="hidden" name="name" value="complete">
-                        <button class="btn btn-outline-success tick circle" type="submit" value="Submit" ><i class="fas fa-check"></i></button> 
-                            <input type="number" name="complete" value="{{ e.id }}" hidden>-</input> 
-                        </button>
-                    </form>  -->
+                        <input type="hidden" name="name" value="tick">
+                        <button id="tick" class="btn btn-outline-success tick circle" type="submit" value="Submit">
+                            <input type="number" name="tick" value="{{ e.id }}" hidden><i id="" class="fas fa-check"></i></input> 
+                        </button> 
+                    </form>   
                     <form method="POST" class="cross circle" hidden>
                         {% csrf_token %} 
                         <input type="hidden" name="name" value="delete">
                         <button id="delete-button" type="submit" value="Submit" class="btn btn-outline-danger circle" >
-                            <input type="number" name="delete" value="{{ e.id }}" hidden>-</input> <!-- Delete goal and all sub classes -->
+                            <input type="number" name="delete" value="{{ e.id }}" hidden>x</input> <!-- Delete goal and all sub classes -->
                         </button>
                     </form> 
                     <button class="plus btn btn-outline-secondary plus circle">+</button> <!-- Add a new goal below, slightly indented, as input field -->
                    
                     <div id="goal-entry">
-                        <form class="inserted_goal" method="POST">
+                        <form id="goal-form" class="inserted_goal" method="POST">
                                 {% csrf_token %}  
                                 <input type="hidden" name="name" value="not_initial">                
                                 <input id="content-input" type="text" name="new_goal">
                                 <input class="parent_id_input" type="number" name="parent" value="{{ e.id }}" hidden> 
-                                <input class="h_id_input hidden" type="number" name="hierarchy_id" value="{{ e.hierarchy_id }}" hidden>
                                 <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}" hidden>   
                                 <input type="submit" hidden> 
                         </form>
@@ -63,12 +61,12 @@
             
         {% endwith %}
         {% empty %}
-        <form method="POST">
+        <!-- <form method="POST">
             {% csrf_token %}
             <input type="hidden" name="name" value="initial">            
             <input type="text" name="first_goal">
             <input type="submit"> 
-        </form>
+        </form> -->
         
         {% endfor %}   
        
@@ -93,7 +91,7 @@
             <input class="parent_id_input" type="number" name="parent" hidden> 
             <input class="depth_id_input" type="number" name="depth_id" value="0" hidden>   
             <input id="add-goal-input-box" class="form-control mr-sm-2" type="text" placeholder="Add Goal" name="new_goal" aria-label="Search">
-            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">+</button>
+            <button id="add-goal_button" class="btn btn-outline-secondary my-2 my-sm-0" type="submit">+</button>
         </form>
     </nav>
     

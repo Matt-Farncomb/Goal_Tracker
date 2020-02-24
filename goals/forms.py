@@ -10,3 +10,6 @@ class GoalForm(forms.Form):
 
 class DeleteForm(forms.Form):
     delete = forms.CharField(label='delete', max_length=100)
+
+class TickForm(forms.Form):
+    tick = forms.CharField(label="tick", max_length=100)

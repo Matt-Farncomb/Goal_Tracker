@@ -5,13 +5,17 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(data);
 
     let goal_arr = [];
+    let form_children = document.querySelector("#new-goal-form").children;
 
     // add arg[0] to elements of arg[1]
     addClickEvent(disable, '.tick');
-    addClickEvent(revealGoalForm, '.plus');
+    addClickEvent(revealGoalForm, '.plus', form_children);
     addClickEvent(showHideChildren, '.title-btn', goal_arr);
     // organise DOM by indenting items to the right depth and adding indented items to their parent list
     organiseDOM(goal_arr);  
+
+    applyCorrectFormValues(form_children);
+
 });
 
 class Goal {
@@ -49,33 +53,69 @@ class Goal {
     }
 }
 
+// make sure teh created goal has the values of the correct parent
+// eg - the goal it was created under or the main page
+function applyCorrectFormValues(form_children) {
+
+    goalFocusDict = { "inputBox": form_children[4] , "submitButton": form_children[5] }
+
+    /* goalFocusList = [form_children[3], form_children[4]]; */
+    document.addEventListener('click', function(event) {
+        checkFocus(goalFocusDict, resetFormValues)
+    })
+}
+
  // when any 'element' is clicked on, perform 'func'
  function addClickEvent(func, element, list) {
-    console.log("1111111")
     document.querySelectorAll(element).forEach(
         ele => ele.addEventListener('click', function(event) {
            func(ele, list);
     })
 )}
 
+// reset values of form to refer to the 0'th level
+function resetFormValues(element) {
+    console.log("I am", element);
+    console.log("element.children[2].value: " + element.children[2].value);
+    console.log("element.children[3].value " + element.children[3].value);
+    
+    element.children[2].value = "None"; //  parent_id_input
+    element.children[3].value = 0; //  depth_id_input
+    console.log("reset");
+}
+
+function checkFocus(elementToCheck, func){
+    console.log("active: ", document.activeElement);
+    console.log("elementToCheck: ", elementToCheck.inputBox);
+    /* if (!elementToCheck.includes(document.activeElement)) {
+        func(elementToCheck.inputBox.parentElement);
+    } */
+    if (!document.activeElement in elementToCheck) {
+        func(elementToCheck.inputBox.parentElement); 
+    }
+}
+
 // when item has been 'ticked', make it appear disabled, hide the tick and reveal the delete button
 function disable(element) {
     if (element.classList.contains("disabled")) {
-        console.log("deleting");
     }
     else {
+        
         /* element.parentElement.parentElement.style.opacity = "20%"; */
         // Make text content and add button greyed out
+        //element needs to be tick form for this to work
         element.nextElementSibling.nextElementSibling.style.opacity = "20%";
         element.parentElement.previousElementSibling.style.opacity = "20%";
 
         //hide tick and reveal cross
         element.hidden = true;
         element.nextElementSibling.hidden = false;
+        /* element.children[2].children[0].value = "True";
+        console.log(element.children[2].children[0]); */
     } 
 }
 
-function revealGoalForm(button) {
+function revealGoalForm(button, form_children) {
     const inserted_goal = button.nextElementSibling;
 
     //TODO: No longer actually 'reveal form'
@@ -86,34 +126,37 @@ function revealGoalForm(button) {
     let parent = button.parentElement.parentElement.parentElement;
     let parent_id = parent.id.split(' ')[1]; 
     parent_id = parent_id.split('-')[1];
-    console.log("p_id: " + parent_id);
+    /* console.log("p_id: " + parent_id); */
 
     //get depth id
     const item_class = parent.className;
     let depth_id = parseInt(item_class.split('depth_')[1]);
-    console.log("depth_id: " + depth_id);
+    /* console.log("depth_id: " + depth_id); */
 
     //get form
     // - change form id and depth to necessary values
-    form = document.querySelector("#new-goal-form");
+    /* form = document.querySelector("#new-goal-form"); */
 
-    for (const child of form.children) {
+    for (const child of form_children) {
         if (child.name == "parent") {
             child.setAttribute("value", parent_id);
         }
         else if (child.name == "depth_id") {
             child.setAttribute("value", depth_id);
         }
+        else if (child.name == "new_goal"){
+            child.focus();
+            
+        }
     }
-    console.log(form.children[3]);
-    console.log(form.children[2]);
+/*     console.log(form.children[3]);
+    console.log(form.children[2]); */
 
     //jump cursor into text box
 }
 
 //when button is clicked on, hide/show all children
 function showHideChildren(button, list) {
-    console.log("one");
     let id = button.id.split('_')[1]; 
     for (const parent of list) {
         if (id === parent.id) {  
@@ -169,8 +212,20 @@ function alignItem(item, row_number) {
     item.style.gridRowStart = row_number.value;
     /* item.classList.add("row-" + row_number.value) */
     row_number.value++;
+    
     /* return row_number; */
 }
+
+function checkIfCompleted(item) {
+    const classList = item.classList;
+    let completed = classList[classList.length-1];
+    let completed_status = completed.split('_')[1];
+    if (completed_status == "True") {
+        // disable fuction starts at tick form, so must bring item to that depth in html tree
+        disable(item.children[0].children[1].children[0]);
+        /* console.log(item.children[0].children[1].children[0]); */
+    }
+}   
 
 // build up a list of goals and their children
 // the list is used to know which child belongs to which parent
@@ -196,6 +251,7 @@ function organiseDOM(list) {
     // align items in DOM according to their depth and organise into a list
     for (const item of items) {
         alignItem(item, row_number);
+        checkIfCompleted(item);
         buildGoalList(item, list);
     }
 

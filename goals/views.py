@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 
-from .forms import GoalForm, DeleteForm, InitialEntryForm
+from .forms import GoalForm, DeleteForm, InitialEntryForm, TickForm
 from .models import Goal
 
 from .helpers import flattenChildren, match_child_with_parent, Goal_Item
@@ -41,18 +41,23 @@ def goal(request):
         
         # delete selected item from database
         if form_name == "delete":
+            
             delete_form = DeleteForm(posted_form)
             if delete_form.is_valid():
                 unwanted_goal_id = delete_form.cleaned_data.get('delete')
                 Goal.objects.filter(id=unwanted_goal_id).delete()
+        elif form_name == "tick":
+                tick_form = TickForm(posted_form)
+                print("ticking")
+                if tick_form.is_valid():
+                    ticked = tick_form.cleaned_data.get('tick')
+                    update = Goal.objects.get(id=ticked)
+                    update.completed = True
+                    print(f"update: {update}")
+                    update.save()
         else:
-            # add first item to database
-            if form_name == "initial":
-                initial_form = InitialEntryForm(posted_form)
-                if initial_form.is_valid():
-                    new_goal = initial_form.cleaned_data.get('first_goal')
             # add an extra item to database
-            elif form_name == "new-goal":
+            if form_name == "new-goal":
                 goal_form = GoalForm(posted_form)
                 if goal_form.is_valid():
                     new_goal = goal_form.cleaned_data.get('new_goal')

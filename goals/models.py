@@ -11,3 +11,4 @@ class Goal(models.Model):
     #hierarchy_id = models.IntegerField(default=0)
     #order in the flow from left to the right
     depth_id = models.IntegerField(default=0)
+    completed = models.BooleanField(default=False)
