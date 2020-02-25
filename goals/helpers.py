@@ -33,7 +33,9 @@ def match_child_with_parent(query):
             if temp_parent is not None:
                 temp_parent = temp_parent.id
 
-            if parent.goal.id == temp_parent:  
+            if parent.goal.id == temp_parent:
+                # all children will be ticked or un ticked
+                child.goal.completed = parent.goal.completed  
                 parent.add_child(child)
 
     return goal_arr

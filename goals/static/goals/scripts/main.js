@@ -65,8 +65,8 @@ function applyCorrectFormValues(form_children) {
     })
 }
 
- // when any 'element' is clicked on, perform 'func'
- function addClickEvent(func, element, list) {
+// when any 'element' is clicked on, perform 'func'
+function addClickEvent(func, element, list) {
     document.querySelectorAll(element).forEach(
         ele => ele.addEventListener('click', function(event) {
            func(ele, list);
