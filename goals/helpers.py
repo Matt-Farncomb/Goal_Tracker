@@ -35,7 +35,9 @@ def match_child_with_parent(query):
 
             if parent.goal.id == temp_parent:
                 # all children will be ticked or un ticked
-                child.goal.completed = parent.goal.completed  
+                if parent.goal.completed == True:
+                   child.goal.completed = True
+                # This is so when I do an untick, it will set them back to what thye were before, the val in the DB
                 parent.add_child(child)
 
     return goal_arr

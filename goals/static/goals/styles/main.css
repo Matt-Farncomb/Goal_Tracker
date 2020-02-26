@@ -123,6 +123,7 @@ TODO: each item will hold a small grid in it
 .tick {
     background-color: var(--local-white);
     grid-column-start: 1;
+    width:100%;
 }
 
 .plus {

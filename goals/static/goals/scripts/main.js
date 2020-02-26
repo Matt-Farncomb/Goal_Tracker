@@ -105,6 +105,7 @@ function disable(element) {
         // Make text content and add button greyed out
         //element needs to be tick form for this to work
         element.nextElementSibling.nextElementSibling.style.opacity = "20%";
+        element.nextElementSibling.nextElementSibling.disabled = true;
         element.parentElement.previousElementSibling.style.opacity = "20%";
 
         //hide tick and reveal cross
