@@ -1,13 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 
 from .forms import GoalForm, DeleteForm, InitialEntryForm, TickForm
 from .models import Goal
 
-from .helpers import flattenChildren, match_child_with_parent, Goal_Item
+from .helpers import flattenChildren, match_child_with_parent, Goal_Item, get_children
 
 import json
+
+from django.http import JsonResponse
+from django.core import serializers
+from django.forms.models import model_to_dict
 
 def goal(request):
 
@@ -19,16 +23,17 @@ def goal(request):
     goals_query = Goal.objects.order_by("parent") 
     matched_list = match_child_with_parent(goals_query) 
 
-
-
     flattened_list = []
     
+    # get a list of all goals in the order they will be on the DOM
     for child in matched_list:   
         flattened_list = flattenChildren(child, flattened_list)
 
+    #print(json.dumps(test_goals))
+
     context =  {
         "goals":flattened_list,
-        "json_test":json.dumps(test_goals),
+        "json_test":json.dumps(test_goals)
     }
 
     if request.method == 'POST':
@@ -74,3 +79,16 @@ def goal(request):
             new_goal.save()
 
     return render(request, 'goals/goal.html', context)
+
+# user can request a goal by its id and receive all its info and its children and their info and children
+def api(request, id):
+    #goal = serialize('json', Goal.objects.filter(id=id))
+
+    children = get_children(id, [])
+    data = { f"children_of_{id}" : children }
+
+    #print(JsonResponse(json.dumps(children), safe=False))
+    return JsonResponse(data) 
+
+#NOTE: Must use a backslash at end of api_test with
+# To remove slashes, you must parse it, slashes should be there as they are part of the json object

@@ -1,3 +1,6 @@
+from django.forms.models import model_to_dict
+from .models import Goal
+
 class Goal_Item:
 
     def __init__(self, goal):
@@ -41,3 +44,15 @@ def match_child_with_parent(query):
                 parent.add_child(child)
 
     return goal_arr
+
+# recursively fetch each child of the child
+def get_children(id, children):
+    query = Goal.objects.filter(parent=id)
+    for e in query:
+        children.append(
+            { 
+                "goal": model_to_dict(e),
+                "children":get_children(e.id, [])
+            }
+        )
+    return children
