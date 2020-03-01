@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(typeof data);
     console.log(data);
 
+    
     let goal_arr = [];
     let form_children = document.querySelector("#new-goal-form").children;
 
@@ -15,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     organiseDOM(goal_arr);  
 
     applyCorrectFormValues(form_children);
+
+    determineInputPosition();
+
 
 });
 
@@ -265,6 +269,23 @@ function organiseDOM(list) {
         }
     }
 }
+
+//increase input windows blackspace depedning on pos in DOM
+// fix to bottom when input is close to the bottom
+function determineInputPosition() {
+    input = document.querySelector('#enter-goal-nav');
+    pos = input.getBoundingClientRect();
+
+    pb = 1000 - pos.y;
+
+    if (pos.y > 900) {
+        input.classList.add("fixed-bottom");
+        input.style.paddingBottom = "3em";
+    } 
+    else {
+        input.style.paddingBottom = pb + "px";
+    }
+}   
 
 
 

@@ -60,7 +60,7 @@ TODO: each item will hold a small grid in it
 
 .item {
     display: block;
-    height:5em;
+    height:4em;
     /* min-width: fit-content; */
 }
 
@@ -180,10 +180,6 @@ TODO: each item will hold a small grid in it
     background-color: white;;
 }
 
-.inserted_goal {
-    /* padding-top: 2em; */
- }
-
 #content-input{
     width: 80%;
     margin-left: 10%;
@@ -244,6 +240,10 @@ footer {
 #add-goal-input-box {
     width: 1150px;
     background-color:azure;
+}
+
+#enter-goal-nav{
+    padding-top: 1em;
 }
 
 /* #tick {
