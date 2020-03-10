@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyCorrectFormValues(form_children);
 
     determineInputPosition();
+    
 
 
 });
@@ -60,12 +61,13 @@ class Goal {
 // make sure teh created goal has the values of the correct parent
 // eg - the goal it was created under or the main page
 function applyCorrectFormValues(form_children) {
-
+    
     goalFocusDict = { "inputBox": form_children[4] , "submitButton": form_children[5] }
 
     /* goalFocusList = [form_children[3], form_children[4]]; */
     document.addEventListener('click', function(event) {
         checkFocus(goalFocusDict, resetFormValues)
+        console.log("clicking");
     })
 }
 
@@ -94,9 +96,13 @@ function checkFocus(elementToCheck, func){
     /* if (!elementToCheck.includes(document.activeElement)) {
         func(elementToCheck.inputBox.parentElement);
     } */
+    console.log("elementToCheck", elementToCheck)
     if (!document.activeElement in elementToCheck) {
+        
         func(elementToCheck.inputBox.parentElement); 
+        
     }
+    console.log("gdfdfgfgg");
 }
 
 // when item has been 'ticked', make it appear disabled, hide the tick and reveal the delete button
@@ -217,6 +223,10 @@ function alignItem(item, row_number) {
     item.style.gridRowStart = row_number.value;
     /* item.classList.add("row-" + row_number.value) */
     row_number.value++;
+    if (row_number.value >= 10) {
+        /* peakRows = true; */
+
+    }
     
     /* return row_number; */
 }
@@ -277,15 +287,33 @@ function determineInputPosition() {
     pos = input.getBoundingClientRect();
 
     pb = 1000 - pos.y;
+    let footerHeight = window.innerHeight - input.offsetTop
 
     if (pos.y > 900) {
-        input.classList.add("fixed-bottom");
+        input.classList.add("fixed-bottom"); 
+        //get width of header element and set footer to that
+        /* header = document.getElementById("header-element"); */
+        headerStyle = window.getComputedStyle(document.body);
+        headerMargin = headerStyle.margin;
+        headerWidth = document.body.clientWidth
+        console.log(headerMargin);
+        input.style.maxWidth = headerWidth + "px";
+        input.style.margin = headerMargin;
         input.style.paddingBottom = "3em";
     } 
     else {
-        input.style.paddingBottom = pb + "px";
+        /* input.style.paddingBottom = pb + "px"; */
     }
-}   
+    styleFooter(footerHeight);
+} 
+
+function styleFooter(footerHeight) {
+    //const footer = document.getElementById("enter-goal-nav");
+    const footerSlab = document.getElementById("bg-footer");
+    footerSlab.style.height = footerHeight + "px";
+    console.log(footer.offsetHeight);
+    
+}
 
 
 

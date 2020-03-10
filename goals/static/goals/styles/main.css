@@ -1,12 +1,14 @@
 
 
 :root {
-    --main-bg-color:#434A66;
-    --local-white:antiquewhite;
+    --main-bg-color:#26292C;
+    --local-white:#EBEBEB;
   }
 
 body {
     background-color: var(--main-bg-color);
+    margin: auto;
+    width: 1000px;
 }
 
 li {
@@ -14,15 +16,23 @@ li {
 }
 
 .navbar {
-    margin-left: 18%;
-    margin-right: 18%;
+   /*  margin-left: 18%;
+    margin-right: 18%; */
 
 }
 
 .nav-item {
+    padding: 1em;
+    
  
-    padding:.5em 2em .25em 2em;
+    /* padding:.5em 2em .25em 2em; */
 }
+
+
+
+.nav-button {
+    text-align: center !important;
+} 
 
 /* a { text-decoration: none; }  */
 
@@ -102,6 +112,8 @@ TODO: each item will hold a small grid in it
     border: none;
     color: var(--local-white);
 
+    margin-left: 2em;
+
     
     display: block; 
 
@@ -121,18 +133,18 @@ TODO: each item will hold a small grid in it
 }
 
 .tick {
-    background-color: var(--local-white);
+    /* background-color: var(--local-white); */
     grid-column-start: 1;
     width:100%;
 }
 
 .plus {
-    background-color: var(--local-white);
+    /* background-color: var(--local-white); */
     grid-column-start: 5;
 }
 
 .cross {
-    background-color: var(--local-white);
+    /* background-color: var(--local-white); */
     grid-column-start:1;
     /* display: none; */
 }
@@ -182,7 +194,7 @@ TODO: each item will hold a small grid in it
 
 #content-input{
     width: 80%;
-    margin-left: 10%;
+    /* margin-left: 10%; */
  }
 
  .divider {
@@ -209,7 +221,7 @@ TODO: each item will hold a small grid in it
  }
 
  .footer {
-    position: fixed;
+    /* position: fixed; */
     bottom: 0;  
     width: 40%;
    
@@ -221,7 +233,7 @@ TODO: each item will hold a small grid in it
 }
 
 footer {
-    position: fixed;
+    /* position: fixed; */
     bottom: 0;  
     width: 64%;
     height: 100px;
@@ -238,14 +250,62 @@ footer {
 }
 
 #add-goal-input-box {
-    width: 1150px;
+    /* width: 780px; */
     background-color:azure;
+    width: calc(100% - 5em);
 }
 
 #enter-goal-nav{
     padding-top: 1em;
+    width: 100% !important;
+}
+
+#new-goal-form {
+    width: 100% !important;
+}
+
+#new-goal-box {
+    width: 100% !important;
+}
+
+#add-goal_button {
+    width:3em;
+}
+
+.form-control {
+    display: inline-block !important;
 }
 
 /* #tick {
     z-index: 2;
 } */
+
+.bg-color-slab {
+    height: 88px;
+    z-index:-1;
+    /* color:#272b36; */
+    background-color:#343a40;
+}
+
+#bg-header {
+    
+   
+}
+
+#bg-footer {
+    /* height: 103px;  */
+}
+
+@media only screen and (max-width: 1000px) {
+    body {
+        width: 100%;
+    }
+
+    #add-goal-input-box {
+        /* change via js. It will get width of whole div and size input as a percentage of that */
+       
+    }
+
+    
+}
+
