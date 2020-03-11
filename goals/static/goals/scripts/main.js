@@ -18,10 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
     applyCorrectFormValues(form_children);
 
     determineInputPosition();
+
+    styleFooter();
+    window.addEventListener('resize', resizeFooter);
+    
     
 
 
 });
+
+
+
+/* window.onresize = styleFooter(window.innerHeight - input.offsetTop); */
+
 
 class Goal {
 
@@ -289,6 +298,8 @@ function determineInputPosition() {
     pb = 1000 - pos.y;
     let footerHeight = window.innerHeight - input.offsetTop
 
+    
+
     if (pos.y > 900) {
         input.classList.add("fixed-bottom"); 
         //get width of header element and set footer to that
@@ -304,14 +315,22 @@ function determineInputPosition() {
     else {
         /* input.style.paddingBottom = pb + "px"; */
     }
-    styleFooter(footerHeight);
+    
+    
 } 
 
-function styleFooter(footerHeight) {
+function resizeFooter() {
+    input = document.querySelector('#enter-goal-nav');
+    headerWidth = document.body.clientWidth
+    input.style.maxWidth = headerWidth + "px";
+}
+
+function styleFooter() {
+    /* let footerHeight = window.innerHeight - document.querySelector('#enter-goal-nav').offsetTop;
     //const footer = document.getElementById("enter-goal-nav");
     const footerSlab = document.getElementById("bg-footer");
     footerSlab.style.height = footerHeight + "px";
-    console.log(footer.offsetHeight);
+    console.log("resizing!!!"); */
     
 }
 

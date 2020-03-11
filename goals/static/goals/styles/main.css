@@ -7,6 +7,21 @@
 
 body {
     background-color: var(--main-bg-color);
+    
+}
+
+#body-content {
+    margin: auto;
+    width: 1000px;
+}
+
+header {
+   width: 100%;
+   background-color: #343a40;
+}
+
+
+#header-element {
     margin: auto;
     width: 1000px;
 }
@@ -256,8 +271,9 @@ footer {
 }
 
 #enter-goal-nav{
-    padding-top: 1em;
+    padding-top: 2em;
     width: 100% !important;
+    background-color: var(--main-bg-color);
 }
 
 #new-goal-form {
@@ -292,6 +308,11 @@ footer {
    
 }
 
+
+header {
+    /* width: 100vw; */
+}
+
 #bg-footer {
     /* height: 103px;  */
 }
@@ -306,6 +327,14 @@ footer {
        
     }
 
+    #header-element {
+        margin: 0;
+        width: 100%;
+    }
+
     
 }
+
+
+
 

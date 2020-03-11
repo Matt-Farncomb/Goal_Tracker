@@ -12,6 +12,7 @@
 {% block content %}
 {{ form.errors }}   
 {{ form.non_field_errors }}
+<div id="body-content">
     <br>
     <ul class="container"> 
         <div id="testy"></div>       
@@ -71,21 +72,8 @@
         {% endfor %}   
        
     </ul> 
-   <!--  <footer class="navbar navbar-dark bg-dark">
-       <li class="sign-in nav-item navbar-nav"><a class="nav-link" href="#">New Goal</a></li>
-    </footer>  -->
-    <!-- <nav class="navbar navbar-dark bg-dark justify-content-between">
-        <a class="navbar-brand text-secondary">Add Goal</a>
-        <form id="new-goal-form" method="POST" class="form-inline">
-            {% csrf_token %}
-            <input type="hidden" name="name" value="initial">
-            <input id="add-goal-input-box" class="form-control mr-sm-2" type="text" placeholder="Add Goal" name="first_goal" aria-label="Search">
-            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">+</button>
-        </form>
-    </nav> -->
-    <!-- fixed-bottom  -->
-    <div id="bg-footer" class="bg-dark fixed-bottom bg-color-slab"></div>
-    <nav id="enter-goal-nav" class="navbar navbar-dark bg-dark justify-content-between">
+
+    <nav id="enter-goal-nav" class="navbar navbar-dark justify-content-between">
         <!-- <a class="navbar-brand text-secondary">Add Goal</a>  -->
         <form id="new-goal-form" class="form-inline" method="POST">
             {% csrf_token %}  
@@ -98,8 +86,9 @@
             
         </form>
     </nav>
-    
+</div>  
 {% endblock content %}
+
 
 
 
