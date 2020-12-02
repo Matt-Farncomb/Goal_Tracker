@@ -2,6 +2,7 @@
 
 :root {
     --main-bg-color:#26292C;
+    --scroll-color:#1c1e1f;
     --local-white:#EBEBEB;
   }
 
@@ -10,20 +11,27 @@ body {
     
 }
 
+
 #body-content {
     margin: auto;
-    width: 1000px;
+    width:60em;
+    max-width: 100%;
+    /* width: 1000px; */
+    padding: 1em;
 }
 
 header {
    width: 100%;
    background-color: #343a40;
+   
 }
 
 
 #header-element {
     margin: auto;
-    width: 1000px;
+    /* width: 1000px; */
+    width:60em;
+    padding-right: 2em;
 }
 
 li {
@@ -60,6 +68,7 @@ li {
 /* holds the main grid */
 .container {
     display: grid;
+    overflow: auto;
 
     grid-template-columns: repeat(20, 5%);
     grid-template-rows:auto;
@@ -70,8 +79,10 @@ li {
    /* background-color:#FBFAEC; */
     /* gap:2px; */
 
-    height: 100%;
+    max-height: 65vh;
     padding: 4px;
+
+    min-width: 100%;
     
   }
 
@@ -86,6 +97,8 @@ TODO: each item will hold a small grid in it
 .item {
     display: block;
     height:4em;
+    padding-top: 2em;
+    /* border-bottom: solid 1px black; */
     /* min-width: fit-content; */
 }
 
@@ -110,6 +123,9 @@ TODO: each item will hold a small grid in it
     display: grid;
     grid-template-columns: repeat(20, 5%);
     grid-template-rows:repeat(10, 10%);
+
+    /* border: 1.5px solid black;
+    padding: 1em; */
     /* height: 5em; */  
 }
 
@@ -119,32 +135,45 @@ TODO: each item will hold a small grid in it
     /*  border: solid 2px black; */
     /* background-color:#E8E8E8; */
 
-    grid-column-start: 11;
+    grid-column-start: 4;
     grid-column-end: 20;
     grid-row-start: 1;
-    grid-row-end: 10;
+    grid-row-end: 12;
 
     border: none;
+    border-bottom: solid 1px var(--scroll-color);
     color: var(--local-white);
 
-    margin-left: 2em;
+    margin-left: 1em;
 
     
     display: block; 
 
-    width:min-content;
-    /* min-width: 6em; */
+    /* width:min-content; */
+    width: 30em;
+    text-align: left;
 
-  
+    white-space: normal;
+    /* min-width: 6em; */
+}
+
+.title span {
+    color:#6c757d;
+    padding-left: 3em;
+}
+
+.title span i {
+    padding-right:1em;
 }
 
 .circle {
     grid-column-end: span 3;
     grid-row-start: 1;
-    grid-row-end: 10;
+    grid-row-end: 7;
     border-radius:50%;
     display: block; 
-    padding: 1px;
+    padding: .05em;
+    min-height: 2em;
 }
 
 .tick {
@@ -156,6 +185,8 @@ TODO: each item will hold a small grid in it
 .plus {
     /* background-color: var(--local-white); */
     grid-column-start: 5;
+    /* grid-column-start: 1; */
+    width:100%;
 }
 
 .cross {
@@ -229,6 +260,11 @@ TODO: each item will hold a small grid in it
     display: grid;
     grid-template-columns: repeat(20, 5%);
     grid-template-rows:repeat(10, 10%);
+    width:min-content;
+
+
+    /* border-bottom: 1px solid black; */
+  
  }
 
  .disabled {
@@ -237,25 +273,30 @@ TODO: each item will hold a small grid in it
 
  .footer {
     /* position: fixed; */
-    bottom: 0;  
-    width: 40%;
+    /* bottom: 0;   */
+    /* width: 100%; */
    
 
-    background-color:black !important;
-    padding-bottom: 2em;
+    /* background-color:black !important; */
+    /* padding-bottom: 2em; */
     
    
 }
 
 footer {
-    /* position: fixed; */
+    position: fixed;
     bottom: 0;  
-    width: 64%;
-    height: 100px;
+    /* width: 1000px; */
+    width:60em;
+    max-width: 100%;
+    /* height: 100px; */
     z-index:-1;
+    /* background-color: red; */
     /* background-color:black !important; */
-    margin-left: 18%;
-    margin-right: 18%;
+    /* margin-left: 18%; */
+    /* margin-right: 18%; */
+    margin-bottom:12vh;
+    padding-top: 2em;
     
 }
 
@@ -266,12 +307,25 @@ footer {
 
 #add-goal-input-box {
     /* width: 780px; */
-    background-color:azure;
+    background-color: var(--main-bg-color);
     width: calc(100% - 5em);
+    border-color: #6c757d;
+    
+}
+
+#add-goal-input-box:hover {
+    background-color: #abdbeb;
+    border-color: var(--local-white)
+}
+
+#add-goal-input-box:focus {
+    background-color: #abdbeb;
+    border-color: var(--local-white);
+    color: var(--scroll-color);
 }
 
 #enter-goal-nav{
-    padding-top: 2em;
+    padding-top: 2.5em;
     width: 100% !important;
     background-color: var(--main-bg-color);
 }
@@ -296,12 +350,12 @@ footer {
     z-index: 2;
 } */
 
-.bg-color-slab {
+/* .bg-color-slab {
     height: 88px;
     z-index:-1;
-    /* color:#272b36; */
+    
     background-color:#343a40;
-}
+} */
 
 #bg-header {
     
@@ -317,9 +371,36 @@ header {
     /* height: 103px;  */
 }
 
-@media only screen and (max-width: 1000px) {
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background:var(--main-bg-color); 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background:var(--scroll-color); 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background:black; 
+  }
+
+  .btn-outline-secondary:hover  {
+    background-color: var(--main-bg-color) !important;
+    border: solid 1px var(--local-white);
+    transition: none !important;
+  }
+
+@media only screen and (max-width: 60em) {
     body {
         width: 100%;
+        
     }
 
     #add-goal-input-box {
@@ -334,6 +415,22 @@ header {
 
     
 }
+
+@media only screen and (max-width: 55em) {
+
+    /* .title {
+        margin-left: 2em;
+    } */
+}
+
+@media only screen and (max-width: 40em) {
+ 
+/* 
+    .title {
+        margin-left: 3.5em;
+    } */
+}
+
 
 
 

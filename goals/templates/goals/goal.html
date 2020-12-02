@@ -19,14 +19,11 @@
             {% for e in goals %}
             {% with e=e.goal %}
             
-            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent.id }} item depth_{{ e.depth_id }} completed_{{ e.completed }}"><!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
-                
-                   
-                
-                   <!--  <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn  title">{{ e.content }}</button> -->
+            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent.id }} item depth_id_{{ e.depth_id }} hidden_{{e.hidden}} closed_{{e.closed}} completed_{{ e.completed }}"><!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
+
             <div class="item-container">
-                <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn  title">{{ e.content }}</button>
-                   
+                <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn  title">{{ e.content }} <span> <i class="fas"> </i></span> </button> 
+                
                 <div class="button-container">
                     <form method="POST" class="tick circle">
                         {% csrf_token %} 
@@ -42,7 +39,7 @@
                             <input type="number" name="delete" value="{{ e.id }}" hidden>x</input> <!-- Delete goal and all sub classes -->
                         </button>
                     </form> 
-                    <button class="plus btn btn-outline-secondary plus circle">+</button> <!-- Add a new goal below, slightly indented, as input field -->
+                    <button class="plus btn btn-outline-secondary plus circle"><i class="fas fa-plus"></i></button> <!-- Add a new goal below, slightly indented, as input field -->
                    
                     <div id="goal-entry">
                         <form id="goal-form" class="inserted_goal" method="POST">
@@ -53,10 +50,12 @@
                                 <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}" hidden>   
                                 <input type="submit" hidden> 
                         </form>
+                        
                     </div>
+                    
                 </div>
             </div> 
-                <hr class="divider">
+                {% comment %} <hr class="divider"> {% endcomment %}
             </li>
            
             
@@ -72,7 +71,7 @@
         {% endfor %}   
        
     </ul> 
-
+    <footer class="footer">
     <nav id="enter-goal-nav" class="navbar navbar-dark justify-content-between">
         <!-- <a class="navbar-brand text-secondary">Add Goal</a>  -->
         <form id="new-goal-form" class="form-inline" method="POST">
@@ -85,8 +84,10 @@
                 <button id="add-goal_button" class="btn btn-outline-secondary my-2 my-sm-0" type="submit">+</button>
             
         </form>
+        <footer>
     </nav>
 </div>  
+
 {% endblock content %}
 
 

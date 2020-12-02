@@ -56,3 +56,8 @@ def get_children(id, children):
             }
         )
     return children
+
+# def str_to_bool(string):
+#     print(string)
+#     # return True if string == "true" else False
+#     return string
