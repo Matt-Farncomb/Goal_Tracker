@@ -38,17 +38,10 @@ li {
     list-style-type: none;
 }
 
-.navbar {
-   /*  margin-left: 18%;
-    margin-right: 18%; */
-
-}
 
 .nav-item {
     padding: 1em;
-    
- 
-    /* padding:.5em 2em .25em 2em; */
+
 }
 
 
@@ -57,7 +50,7 @@ li {
     text-align: center !important;
 } 
 
-/* a { text-decoration: none; }  */
+
 
 
 .parent_id_input {
@@ -73,11 +66,6 @@ li {
     grid-template-columns: repeat(20, 5%);
     grid-template-rows:auto;
     row-gap: 0%;
-    
-    /* border: 2px solid black; */
-
-   /* background-color:#FBFAEC; */
-    /* gap:2px; */
 
     max-height: 65vh;
     padding: 4px;
@@ -86,32 +74,16 @@ li {
     
   }
 
-/* generic class for each individual grid item */
-
-/* 
-TODO: each item will hold a small grid in it
-- these will reveal the little buttons when hovered over
-- they will each be little squarish puzzle pieces that linked to their sub goals like a puzzle piece
- */
 
 .item {
     display: block;
     height:4em;
     padding-top: 2em;
-    /* border-bottom: solid 1px black; */
-    /* min-width: fit-content; */
 }
 
 .hidden {
     display: none;
 }
-
-/* .inner-container {
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows:repeat(10, 10%);
-    height: 6em;
-} */
 
 .button-container {
     grid-column-start:1;
@@ -124,16 +96,11 @@ TODO: each item will hold a small grid in it
     grid-template-columns: repeat(20, 5%);
     grid-template-rows:repeat(10, 10%);
 
-    /* border: 1.5px solid black;
-    padding: 1em; */
-    /* height: 5em; */  
 }
 
 
 
 .title {
-    /*  border: solid 2px black; */
-    /* background-color:#E8E8E8; */
 
     grid-column-start: 4;
     grid-column-end: 20;
@@ -149,12 +116,10 @@ TODO: each item will hold a small grid in it
     
     display: block; 
 
-    /* width:min-content; */
     width: 30em;
     text-align: left;
 
     white-space: normal;
-    /* min-width: 6em; */
 }
 
 .title span {
@@ -177,56 +142,23 @@ TODO: each item will hold a small grid in it
 }
 
 .tick {
-    /* background-color: var(--local-white); */
     grid-column-start: 1;
     width:100%;
 }
 
 .plus {
-    /* background-color: var(--local-white); */
     grid-column-start: 5;
-    /* grid-column-start: 1; */
     width:100%;
 }
 
 .cross {
-    /* background-color: var(--local-white); */
     grid-column-start:1;
-    /* display: none; */
 }
 
 #delete-button {
     width: 100%;
     height: 100%;
 }
-
-
-
-/* .item:nth-of-type(even) .top-tab-l,  .item:nth-of-type(even) .top-tab-r{
-    background-color:#9FD8E0;
-}
-
-.item:nth-of-type(odd) .top-tab-l,  .item:nth-of-type(odd) .top-tab-r{
-    background-color:#7FACB5;
-} */
-
-/* 
-.item:nth-of-type(even) .bottom-tab-l, .item:nth-of-type(even) .bottom-tab-r {
-    background-color: red;
-}
-
-.item:nth-of-type(odd) .bottom-tab-l, .item:nth-of-type(odd) .bottom-tab-r {
-    background-color: blanchedalmond;
-}
- */
-
-/* .item:nth-of-type(odd) {
-    background-color:#9FD8E0;
-}
-
-.item:nth-of-type(even) {
-    background-color:#7FACB5;
-} */
 
 #goal-entry {
     grid-column-start:1;
@@ -240,7 +172,6 @@ TODO: each item will hold a small grid in it
 
 #content-input{
     width: 80%;
-    /* margin-left: 10%; */
  }
 
  .divider {
@@ -248,9 +179,6 @@ TODO: each item will hold a small grid in it
      background-color: black;
      grid-column-start: 1;
      grid-column-end: 20;
-/* 
-    grid-row-start: 1;
-    margin-top: 3.5em; */
      
      width:100%;
      
@@ -260,44 +188,22 @@ TODO: each item will hold a small grid in it
     display: grid;
     grid-template-columns: repeat(20, 5%);
     grid-template-rows:repeat(10, 10%);
-    width:min-content;
-
-
-    /* border-bottom: 1px solid black; */
-  
+    width:min-content;  
  }
 
  .disabled {
      opacity: 40%;
  }
 
- .footer {
-    /* position: fixed; */
-    /* bottom: 0;   */
-    /* width: 100%; */
-   
-
-    /* background-color:black !important; */
-    /* padding-bottom: 2em; */
-    
-   
-}
 
 footer {
     position: fixed;
     bottom: 0;  
-    /* width: 1000px; */
     width:60em;
     max-width: 100%;
-    /* height: 100px; */
     z-index:-1;
-    /* background-color: red; */
-    /* background-color:black !important; */
-    /* margin-left: 18%; */
-    /* margin-right: 18%; */
     margin-bottom:12vh;
-    padding-top: 2em;
-    
+    padding-top: 2em;  
 }
 
 #new-goal-entry-label {
@@ -306,7 +212,6 @@ footer {
 }
 
 #add-goal-input-box {
-    /* width: 780px; */
     background-color: var(--main-bg-color);
     width: calc(100% - 5em);
     border-color: #6c757d;
@@ -346,31 +251,6 @@ footer {
     display: inline-block !important;
 }
 
-/* #tick {
-    z-index: 2;
-} */
-
-/* .bg-color-slab {
-    height: 88px;
-    z-index:-1;
-    
-    background-color:#343a40;
-} */
-
-#bg-header {
-    
-   
-}
-
-
-header {
-    /* width: 100vw; */
-}
-
-#bg-footer {
-    /* height: 103px;  */
-}
-
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
@@ -403,34 +283,11 @@ header {
         
     }
 
-    #add-goal-input-box {
-        /* change via js. It will get width of whole div and size input as a percentage of that */
-       
-    }
-
     #header-element {
         margin: 0;
         width: 100%;
-    }
-
-    
+    }  
 }
-
-@media only screen and (max-width: 55em) {
-
-    /* .title {
-        margin-left: 2em;
-    } */
-}
-
-@media only screen and (max-width: 40em) {
- 
-/* 
-    .title {
-        margin-left: 3.5em;
-    } */
-}
-
 
 
 

@@ -125,3 +125,5 @@ STATIC_URL = '/static/'
     os.path.join(BASE_DIR, 'statics'),
 ]
  """
+
+AUTH_USER_MODEL = "goals.UserProfile"

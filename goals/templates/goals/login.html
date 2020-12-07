@@ -1,0 +1,16 @@
+
+{% extends 'goals/auth_base.html' %}
+
+{% block form %}
+
+    {% include 'goals/user_pw.html' %}
+
+{% endblock %}
+
+{% block belowSubmit %}
+
+    <div id="register-link" class="text-right">
+        <a href="{% url 'register' %}" class="text-success">Register here</a>
+    </div>
+    
+{% endblock %}

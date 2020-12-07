@@ -1,26 +1,29 @@
 {% extends 'goals/base.html' %}
+{% load static %}
+
 {% block head %}
-<script type="text/javascript">
-   //this works because the is just like the normal template django thing
-    //converts string recieved from django template to object
-    //will then iterate thouogh this object like in main.js
-    //SHould link parent id with goal id with foreign_keys then will be easier (maybe) to build tree
-    let data = JSON.parse({{ json_test|safe }});
-</script>
+    <link rel="stylesheet" type="text/css" href="{% static 'goals/styles/main.css' %}">
+    <script type="text/javascript" src="{% static 'goals/scripts/main.js' %}"></script>
+    <script type="text/javascript" src="{% static 'goals/scripts/Goal.js' %}"></script>
 {% endblock head %}
 
 {% block content %}
+
 {{ form.errors }}   
 {{ form.non_field_errors }}
+
 <div id="body-content">
+   <header>
+        <nav id="header-element" class="navbar navbar-dark bg-dark">
+            <li id="nav-title" class=" nav-item navbar-nav col-7 col-lg-9 "><a class="nav-link" href="#"> {{ user.username }}'s Goal Tracker</a></li>
+            <li class="nav-button logout nav-item navbar-nav col-2 col-lg-1 "><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>   
+          </nav>
+    </header>
     <br>
     <ul class="container"> 
-        <div id="testy"></div>       
-            {% for e in goals %}
-            {% with e=e.goal %}
-            
-            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent.id }} item depth_id_{{ e.depth_id }} hidden_{{e.hidden}} closed_{{e.closed}} completed_{{ e.completed }}"><!-- {{ e.hierarchy_id }} - {{ e.depth_id }} -->
-
+        {% for e in goals %}
+        {% with e=e.goal %}
+            <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent.id }} item depth_id_{{ e.depth_id }} hidden_{{e.hidden}} closed_{{e.closed}} completed_{{ e.completed }}">
             <div class="item-container">
                 <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn  title">{{ e.content }} <span> <i class="fas"> </i></span> </button> 
                 
@@ -40,40 +43,28 @@
                         </button>
                     </form> 
                     <button class="plus btn btn-outline-secondary plus circle"><i class="fas fa-plus"></i></button> <!-- Add a new goal below, slightly indented, as input field -->
-                   
+                
                     <div id="goal-entry">
                         <form id="goal-form" class="inserted_goal" method="POST">
-                                {% csrf_token %}  
-                                <input type="hidden" name="name" value="not_initial">                
-                                <input id="content-input" type="text" name="new_goal">
-                                <input class="parent_id_input" type="number" name="parent" value="{{ e.id }}" hidden> 
-                                <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}" hidden>   
-                                <input type="submit" hidden> 
+                            {% csrf_token %}  
+                            <input type="hidden" name="name" value="not_initial">                
+                            <input id="content-input" type="text" name="new_goal">
+                            <input class="parent_id_input" type="number" name="parent" value="{{ e.id }}" hidden> 
+                            <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}" hidden>   
+                            <input type="submit" hidden> 
                         </form>
-                        
-                    </div>
-                    
+                    </div>             
                 </div>
             </div> 
-                {% comment %} <hr class="divider"> {% endcomment %}
             </li>
-           
-            
+
         {% endwith %}
         {% empty %}
-        <!-- <form method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="name" value="initial">            
-            <input type="text" name="first_goal">
-            <input type="submit"> 
-        </form> -->
-        
         {% endfor %}   
        
     </ul> 
     <footer class="footer">
     <nav id="enter-goal-nav" class="navbar navbar-dark justify-content-between">
-        <!-- <a class="navbar-brand text-secondary">Add Goal</a>  -->
         <form id="new-goal-form" class="form-inline" method="POST">
             {% csrf_token %}  
             <input type="hidden" name="name" value="new-goal">                
@@ -82,11 +73,10 @@
             
                 <input id="add-goal-input-box" class="form-control mr-2" type="text" placeholder="Add Goal" name="new_goal">
                 <button id="add-goal_button" class="btn btn-outline-secondary my-2 my-sm-0" type="submit">+</button>
-            
         </form>
         <footer>
     </nav>
-</div>  
+</div>
 
 {% endblock content %}
 

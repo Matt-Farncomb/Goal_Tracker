@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #26292C !important;
+    height: 100vh;
+    
+  }
+  
+  #form-box {
+    margin-top: 120px;
+    max-width: 600px;
+    /* height: 320px; */
+    border: 1px solid #9C9C9C;
+    background-color: #EAEAEA;
+  }
+
+  #form-box > form {
+    padding: 20px;
+    color:#28a745 !important;
+  }
+
+  #register-link {
+    margin-top: -55px;
+  }
+
+  .btn {
+      background-color: #343a40 !important;
+  }

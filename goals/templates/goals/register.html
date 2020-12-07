@@ -1,0 +1,17 @@
+{% extends 'goals/auth_base.html' %}
+
+{% block form %}
+
+    <div class="form-group">
+        <label for="firstname" class="text-success">First Name:</label><br>
+        <input type="text" name="firstname" id="firstname" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="lastname" class="text-success">Last Name:</label><br>
+        <input type="text" name="lastname" id="lastname" class="form-control">
+    </div>
+
+    {% include 'goals/user_pw.html' %}
+
+{% endblock %}
+ 

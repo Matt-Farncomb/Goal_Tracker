@@ -1,0 +1,39 @@
+
+<!------ Include the above in your HEAD tag ---------->
+{% extends 'goals/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'goals/styles/login.css' %}">
+{% endblock head %}
+
+ {% block content %}
+            
+    <div>
+        <h3 class="text-center text-white pt-5">Goal Tracker</h3>
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-md-6">
+                    <div id="form-box" class="col-md-12">
+                        <form class="form" action="" method="post">
+                        {% csrf_token %} 
+                            <h3 class="text-center text-success">{{ message }}</h3>
+                           
+                           {% block form %}
+                           {% endblock %}
+
+                            <div class="form-group">
+                                <input type="submit" name="submit" class="btn btn-success btn-md" value={{ submit_label }}>
+                            </div>
+                            
+                           {% block belowSubmit %}
+                           {% endblock %}
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

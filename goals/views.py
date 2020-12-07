@@ -4,15 +4,91 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
 from django.forms.models import model_to_dict  
 from django.http import HttpResponse, JsonResponse
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.urls import reverse
+# from django.contrib.auth.models import User as DjangoUser
 
-from .forms import GoalForm, DeleteForm, InitialEntryForm, TickForm
-from .models import Goal
+from .forms import GoalForm, DeleteForm, InitialEntryForm, TickForm, LoginForm, RegisterForm
+from .models import Goal, UserProfile
 from .helpers import flattenChildren, match_child_with_parent, Goal_Item, get_children
 import json
-             
 
-def goal(request):
+def register(request):
+    form = RegisterForm(request.POST)
+    if form.is_valid():
+        # print("valid")
+        # username = form.cleaned_data.get('username')
+        # password = form.cleaned_data.get('password')
+        # firstname = form.cleaned_data.get('firstname')
+        # lastname = form.cleaned_data.get('lastname')
 
+        new_user = UserProfile.objects.create_user(
+            username =form.cleaned_data.get('username'),
+            password = form.cleaned_data.get('password'),
+            first_name = form.cleaned_data.get('firstname'),
+            last_name = form.cleaned_data.get('lastname'),
+            # firstname = form.cleaned_data.get('firstname'),
+            # lastname = form.cleaned_data.get('lastname')
+        )
+        new_user.save()
+
+
+
+        # print(f"username: {username} password: {password} firstname: {firstname} lastname: {lastname}")
+
+        # new_user = User(
+        #     username=username, password=password, 
+        #     firstname=firstname, lastname=lastname
+        #     )
+        # new_user.save()
+        
+        
+        return redirect(login)
+    else:
+        print("invalid")
+
+    context = { 
+            "message": "Welcome!",
+            "submit_label": "Register"
+        }
+
+    return render(request, 'goals/register.html', context)
+
+def auth(request, context):
+    form = LoginForm(request.POST)
+    if form.is_valid():
+        username = form.cleaned_data.get("username");
+        password = form.cleaned_data.get("password");
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            auth_login(request, user)
+            return redirect(home)
+        else:
+            context = { 
+                "message": "Wrong username or password!",
+                "submit_label": "login"
+            } 
+    return render(request, 'goals/login.html', context)
+
+def login(request, message=None):
+
+    context = { 
+        "message": "Welcome!",
+        "submit_label": "Login"
+    }
+
+    return auth(request, context)
+
+def logout(request):
+    auth_logout(request)
+    context = { 
+        "message": "You have been logged out",
+        "submit_label": "login"
+    }
+    return auth(request, context)
+
+
+def home(request):
     # when goals are closed or opened
     if request.is_ajax() and request.method == "POST":
 
@@ -29,13 +105,10 @@ def goal(request):
 
         return HttpResponse(status=204)
 
+    elif request.method == "GET" and not request.user.is_authenticated:
+        return redirect(login)
     else:
-        ### --- For testing/experimenting --- ###
-        #json_test = json.dumps(22)
-        test_goals = serialize('json', Goal.objects.all())
-        ### --------------------------------- ###
-
-        goals_query = Goal.objects.order_by("parent") 
+        goals_query = Goal.objects.filter(user_id=request.user.id ).order_by("parent") 
         matched_list = match_child_with_parent(goals_query) 
 
         flattened_list = []
@@ -45,8 +118,8 @@ def goal(request):
             flattened_list = flattenChildren(child, flattened_list)
 
         context =  {
-            "goals":flattened_list,
-            "json_test":json.dumps(test_goals)
+            "username": request.user,
+            "goals":flattened_list
         }
          
         if request.method == 'POST':
@@ -85,10 +158,10 @@ def goal(request):
                             parent = e.goal
                             break
 
-                    new_goal = Goal(content=new_goal, parent=parent, depth_id=depth_id)
+                    new_goal = Goal(content=new_goal, parent=parent, depth_id=depth_id, user_id=request.user.id)
                     new_goal.save()
 
-            return redirect(goal)
+            return redirect(home)
                 
         return render(request, 'goals/goal.html', context)
 
