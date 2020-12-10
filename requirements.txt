@@ -27,3 +27,4 @@ urllib3==1.26.2
 whitenoise==5.2.0
 wrapt==1.12.1
 xmltodict==0.12.0
+whitenoise
