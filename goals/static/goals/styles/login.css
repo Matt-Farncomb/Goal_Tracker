@@ -12,17 +12,21 @@ body {
     /* height: 320px; */
     border: 1px solid #9C9C9C;
     background-color: #EAEAEA;
+    height: fit-content;
   }
 
   #form-box > form {
-    padding: 20px;
+    padding: 20px 20px 0px 20px;
     color:#28a745 !important;
   }
 
   #register-link {
-    margin-top: -55px;
+    margin-top: -75px;
+    padding-bottom: 40px;
   }
 
   .btn {
       background-color: #343a40 !important;
+      margin-bottom: 20px;
+      margin-top:10px;
   }

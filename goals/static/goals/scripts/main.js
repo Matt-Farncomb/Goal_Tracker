@@ -24,7 +24,8 @@ function validate(e) {
     const newGoal = e.target.elements["new_goal"].value;
     const MAX_WORD_LENGTH = 29; // longest word in English
 
-    if (newGoal.length > MAX_WORD_LENGTH) {
+    if (newGoal.length == 0)  e.preventDefault();
+    else if (newGoal.length > MAX_WORD_LENGTH) {
         const words =  newGoal.split(' ');
         words.forEach(word => {
             if (word.length > MAX_WORD_LENGTH) {
@@ -254,13 +255,15 @@ function organiseDOM(list) {
                 parent.addChild(child);  
             }
         }
-
-        parent.getSpan().innerHTML += "  " + parent.numberOfChildren();
-
+        
         if (parent.hiddenByParent) parent.htmlElemment.style.display = "none";
  
         allocateArrow(parent);
     }   
+
+    for (e of list) {
+        e.getSpan().innerHTML += "  " + e.numberOfChildren();
+    }
 }
 
 
