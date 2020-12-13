@@ -1,20 +1,20 @@
 from django import forms
 
-# from django.contrib.auth.forms import UserCreationForm
 
-# class UserForm(UserCreationForm):
-#     email = forms.EmailField(required=True)
-#     class Meta:
-#         # model = User
-#         fields = ['username', 'password', 'first_name', 'last_name', 'email']
+max_goal_length = 60
+
 
 class InitialEntryForm(forms.Form):
     first_goal = forms.CharField(label='first_goal', max_length=100)
 
 class GoalForm(forms.Form):
-    new_goal = forms.CharField(label='new_goal', max_length=100)
+    new_goal = forms.CharField(label='new_goal', max_length=max_goal_length)
     parent = forms.IntegerField(required=False, label='parent')
     depth_id = forms.IntegerField(label='depth_id') 
+
+class EditForm(forms.Form):
+    id = forms.CharField(label="id", max_length=100)
+    new_goal = forms.CharField(label='new_goal', max_length=max_goal_length)
 
 class DeleteForm(forms.Form):
     delete = forms.CharField(label='delete', max_length=100)

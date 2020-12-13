@@ -6,11 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     addClickEvent(disable, '.tick');
     addClickEvent(prepareToAddGoal, '.plus', formChildren);
-    addClickEvent(showHideChildren, '.title-btn', goalArr);
+    addClickEvent(showHideChildren, '#arrow_button', goalArr);
     organiseDOM(goalArr);  
     applyCorrectFormValues(formChildren);
 
     form.onsubmit = validate;
+
+    let input = document.querySelector("#add-goal-input-box");
+    // console.log(input);
+
+    input.addEventListener('keyup', (event) => {
+        countGoal(event);
+    })
+    
 
 });
 
@@ -19,6 +27,18 @@ function getIntFromId(element) {
     const id = id_element.split('-')[1];
     return id
 }
+
+function countGoal(e) {
+    const target = e.target;
+    const valueLength = target.value.length;
+    if (valueLength >= target.maxLength) {
+        if (!target.classList.contains("tooLong"))  target.classList.add("tooLong");
+    }
+    else target.classList.remove("tooLong");
+
+}
+
+
 
 function validate(e) {
     const newGoal = e.target.elements["new_goal"].value;
@@ -69,8 +89,11 @@ function checkFocus(elementToCheck, func){
 function disable(element) {
     if (!element.classList.contains("disabled")) { 
         // Make text content and add button greyed out
+        // console.log(element);
         element.nextElementSibling.nextElementSibling.style.opacity = "20%";
+        
         element.nextElementSibling.nextElementSibling.disabled = true;
+        
         element.parentElement.previousElementSibling.style.opacity = "20%";
         //hide tick and reveal cross
         element.hidden = true;
@@ -104,8 +127,8 @@ function prepareToAddGoal(button, form_children) {
 
 //when button is clicked on, hide/show all children
 function showHideChildren(button, list) {
-    
-    let id = button.id.split('_')[1]; 
+    // console.log(button.previousElementSibling.children[4]);
+    let id = button.previousElementSibling.children[4].id.split('_')[1]; 
 
     for (const parent of list) {
         
@@ -188,7 +211,8 @@ function checkIfCompleted(item) {
     const is_completed = getValueFromClass(item, "completed");
     if (is_completed) {
         // disable function starts at tick form, so must bring item to that depth in html tree
-        disable(item.children[0].children[1].children[0]);
+        // disable(item.children[0].children[1].children[0]);
+        disable(item.children[0].children[2].children[0]);
     }
 }
 
@@ -228,8 +252,11 @@ function buildGoalList(htmlElement, list) {
 }
 
 function allocateArrow(goal) {
-    let span = goal.getSpan();
-    span.firstElementChild.className = goal.closed ? "fas fa-arrow-down" : "fas fa-arrow-up";
+    // let span = goal.getSpan();
+    // span.firstElementChild.className = goal.closed ? "fas fa-arrow-down" : "fas fa-arrow-up";
+    let arrow = goal.htmlElemment.children[0].children[1].children[0];
+    // console.log(arrow);
+    arrow.className = goal.closed ? "fas fa-arrow-down" : "fas fa-arrow-up";
 }
 
 function organiseDOM(list) {
@@ -262,7 +289,12 @@ function organiseDOM(list) {
     }   
 
     for (e of list) {
-        e.getSpan().innerHTML += "  " + e.numberOfChildren();
+        // e.getSpan().innerHTML += "  " + e.numberOfChildren();
+        let span = e.htmlElemment.children[0].children[1].children[1];
+        // console.log("span is:" + span.innerHTML);
+        span.innerHTML += "  " + e.numberOfChildren();
+
+        
     }
 }
 
@@ -286,3 +318,10 @@ function close(data) {
         dataType: 'json'
     })
 }
+
+
+
+
+
+   
+

@@ -23,6 +23,7 @@ body {
 header {
    width: 100%;
    background-color: #343a40;
+   margin-bottom: 1.5em;
    
 }
 
@@ -71,18 +72,25 @@ li {
     grid-template-rows:auto;
     row-gap: 0%;
 
-    max-height: 65vh;
+    max-height: 60vh;
     padding: 4px;
 
     min-width: 100%;
+
+    margin-left: 1.5em;
     
   }
 
 
 .item {
-    display: block;
-    height:4em;
-    padding-top: 2em;
+    /* display: block; */
+    height:4.5em;
+    /* padding-top: 2em; */
+    
+}
+
+.item:first-child {
+   /* height:6em; */
 }
 
 .hidden {
@@ -145,6 +153,20 @@ li {
     min-height: 2em;
 }
 
+#arrow_button {
+    grid-column-start: 30;
+    height: fit-content;
+    background-color: var(--main-bg-color);
+    color:#6c757d;
+    font-size: 1em;
+    font-weight: 0.100;
+}
+
+#arrow_button span{
+    padding: 1.5em;
+}
+
+
 .tick {
     grid-column-start: 1;
     width:100%;
@@ -190,7 +212,7 @@ li {
 
  .item-container {
     display: grid;
-    grid-template-columns: repeat(20, 5%);
+    grid-template-columns: repeat(20, 2%);
     grid-template-rows:repeat(10, 10%);
     width:min-content;  
  }
@@ -205,9 +227,10 @@ footer {
     bottom: 0;  
     width:60em;
     max-width: 100%;
-    z-index:-1;
-    margin-bottom:12vh;
-    padding-top: 2em;  
+    z-index:1;
+    /* margin-bottom:12vh; */
+    padding-top: 2em; 
+    min-height: 100px;
 }
 
 #new-goal-entry-label {
@@ -215,11 +238,23 @@ footer {
     
 }
 
+.goal {     
+    height: 3.25em !important;
+}
+
+.goal:last-child {
+    margin-bottom: 5.5em;
+}
+
 #add-goal-input-box {
     background-color: var(--main-bg-color);
     width: calc(100% - 5em);
-    border-color: #6c757d;
-    
+    border-color: #6c757d;    
+   
+}
+
+#new-goal-form {
+    margin-bottom: 8em;
 }
 
 #add-goal-input-box:hover {
@@ -245,6 +280,11 @@ footer {
 
 #new-goal-box {
     width: 100% !important;
+}
+
+.edit-goal-form {
+    height: fit-content;
+    width: fit-content;
 }
 
 #add-goal_button {
@@ -293,6 +333,16 @@ footer {
     }  
 }
 
+.tooLong {
+    background-color: pink !important;
+    color:red !important;
+}
 
 
 
+.fix-size {
+    /* display: block; */
+    height:3.5em !important; 
+
+    
+}

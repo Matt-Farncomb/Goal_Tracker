@@ -8,10 +8,11 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.urls import reverse
 # from django.contrib.auth.models import User as DjangoUser
 
-from .forms import GoalForm, DeleteForm, InitialEntryForm, TickForm, LoginForm, RegisterForm
+from .forms import GoalForm, DeleteForm, InitialEntryForm, TickForm, LoginForm, RegisterForm, EditForm, max_goal_length
 from .models import Goal, UserProfile
 from .helpers import flattenChildren, match_child_with_parent, Goal_Item, get_children
-import json
+import json 
+
 
 def register(request):
     form = RegisterForm(request.POST)
@@ -89,6 +90,9 @@ def logout(request):
 
 
 def home(request):
+
+    global max_goal_length
+
     # when goals are closed or opened
     if request.is_ajax() and request.method == "POST":
 
@@ -119,11 +123,11 @@ def home(request):
 
         context =  {
             "username": request.user,
-            "goals":flattened_list
+            "goals":flattened_list,
+            "max_goal_length":max_goal_length
         }
          
         if request.method == 'POST':
-
             #initital values
             parent = None
             depth_id = 1  
@@ -144,6 +148,17 @@ def home(request):
                         update = Goal.objects.get(id=ticked)
                         update.completed = True
                         update.save()
+            elif form_name == "edit-goal":
+                edit_form = EditForm(posted_form)
+                print("trying")
+                if edit_form.is_valid():
+                    print("editing")
+                    print(edit_form.cleaned_data)
+                    _id = edit_form.cleaned_data.get('id')
+                    new_goal = edit_form.cleaned_data.get('new_goal')
+                    update = Goal.objects.get(id=_id)
+                    update.content = new_goal
+                    update.save()
             elif form_name == "new-goal":
                 # add an extra item to database
                 goal_form = GoalForm(posted_form)
