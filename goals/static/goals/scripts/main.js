@@ -1,7 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
+    const scrollPos = JSON.parse(document.getElementById('scroll').textContent);
+
+
     let goalArr = [];
     const form = document.querySelector("#new-goal-form");
+    const editForms = document.querySelectorAll(".edit-goal-form");
+    const plusForms = document.querySelectorAll(".plusForm")
     let formChildren = form.children;
     
     addClickEvent(disable, '.tick');
@@ -12,15 +17,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.onsubmit = validate;
 
+    for (let e of editForms) {
+        e.onsubmit = postEdit;
+    }
+
+    for (let e of plusForms) {
+        console.log("adding")
+        e.onsubmit = addScrollValues;
+    }
+    
+
     let input = document.querySelector("#add-goal-input-box");
     // console.log(input);
 
     input.addEventListener('keyup', (event) => {
         countGoal(event);
     })
-    
 
+    const cont = document.querySelector(".container");
+    console.log(cont.scrollLeft, cont.scrollTop);
+    cont.scrollTop = scrollPos.yPos;
+    cont.scrollLeft = scrollPos.xPos;
+    
+    
+    const getById = `#id_${scrollPos.id}`;
+    const newGoal =  document.querySelector(getById);
+    newGoal.value = "";
+    newGoal.focus();
+  
+    console.log(newGoal);
 });
+
+function addScrollValues(e) {
+    // e.preventDefault();
+    
+    const cont = document.querySelector(".container");
+    e.target.elements["scrollYpos"].value = cont.scrollTop;
+    e.target.elements["scrollXpos"].value = cont.scrollLeft;
+    console.log(e.target.elements["scrollYpos"].value);
+    
+}
 
 function getIntFromId(element) {
     const id_element = element.id.split(' ')[1]; 
@@ -37,8 +73,6 @@ function countGoal(e) {
     else target.classList.remove("tooLong");
 
 }
-
-
 
 function validate(e) {
     const newGoal = e.target.elements["new_goal"].value;
@@ -128,12 +162,12 @@ function prepareToAddGoal(button, form_children) {
 //when button is clicked on, hide/show all children
 function showHideChildren(button, list) {
     // console.log(button.previousElementSibling.children[4]);
-    let id = button.previousElementSibling.children[4].id.split('_')[1]; 
-
+    // let id = button.previousElementSibling.children[4].id.split('_')[1]; 
+    let id  = button.previousElementSibling.children[2].value;
     for (const parent of list) {
-        
+        // console.log(button.previousElementSibling);
         if (id === parent.id) {
-
+            
             hideElements(parent, parent.children, parent.closed);
             parent.closed = !parent.closed;
             
@@ -314,6 +348,33 @@ function close(data) {
         type:'POST',
         data: { 
             "data": JSON.stringify(data),
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value },
+        dataType: 'json'
+    })
+}
+
+function postEdit(e) {
+    const cont = document.querySelector(".container");
+    // send scroll position to server
+    // server will add scroll position to session
+    // django renders the session[scrollPos] as json thingy
+    // adjust screen to that position on load
+    
+    e.preventDefault()
+    const value = e.target.children[3].value
+
+    data = {
+        "id":e.target.children[2].value,
+        "goal":value
+    }
+
+    // console.log(data);
+
+    $.ajax({
+        url:'',
+        type:'POST',
+        data: {
+            "edit_data": JSON.stringify(data),
             csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value },
         dataType: 'json'
     })

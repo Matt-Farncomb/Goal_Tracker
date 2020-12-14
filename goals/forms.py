@@ -12,6 +12,12 @@ class GoalForm(forms.Form):
     parent = forms.IntegerField(required=False, label='parent')
     depth_id = forms.IntegerField(label='depth_id') 
 
+class TempGoalForm(forms.Form):
+    parent = forms.IntegerField(required=False, label='parent')
+    depth_id = forms.IntegerField(label='depth_id') 
+    scrollYpos = forms.IntegerField(label='scrollYpos')
+    scrollXpos = forms.IntegerField(label='scrollXpos')
+
 class EditForm(forms.Form):
     id = forms.CharField(label="id", max_length=100)
     new_goal = forms.CharField(label='new_goal', max_length=max_goal_length)

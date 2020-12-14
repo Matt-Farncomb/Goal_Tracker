@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.urls import reverse
 # from django.contrib.auth.models import User as DjangoUser
 
-from .forms import GoalForm, DeleteForm, InitialEntryForm, TickForm, LoginForm, RegisterForm, EditForm, max_goal_length
+from .forms import GoalForm, DeleteForm, InitialEntryForm, TickForm, LoginForm, RegisterForm, EditForm, max_goal_length, TempGoalForm
 from .models import Goal, UserProfile
 from .helpers import flattenChildren, match_child_with_parent, Goal_Item, get_children
 import json 
@@ -96,16 +96,25 @@ def home(request):
     # when goals are closed or opened
     if request.is_ajax() and request.method == "POST":
 
-        data = json.loads(request.POST.get('data'))
-        hidden = data["hidden"]
-        to_hide = Goal.objects.get(id=data["child_id"])
-        to_close = Goal.objects.get(id=data["parent_id"])
+        
+        if (request.POST.get('edit_data') != None):
+            data = json.loads(request.POST.get('edit_data'))
+            _id = data["id"]
+            edited_gaol = data["goal"]
+            update = Goal.objects.get(id=_id)
+            update.content = edited_gaol
+            update.save()
+        elif (request.POST.get('data') != None):
+            data = json.loads(request.POST.get('data'))
+            hidden = data["hidden"]
+            to_hide = Goal.objects.get(id=data["child_id"])
+            to_close = Goal.objects.get(id=data["parent_id"])
 
-        to_hide.hidden = hidden
-        to_close.closed = hidden
+            to_hide.hidden = hidden
+            to_close.closed = hidden
 
-        to_hide.save()
-        to_close.save()
+            to_hide.save()
+            to_close.save()
 
         return HttpResponse(status=204)
 
@@ -126,6 +135,12 @@ def home(request):
             "goals":flattened_list,
             "max_goal_length":max_goal_length
         }
+
+        if request.session["scroll"] != None:
+            context["scroll"] = request.session["scroll"]
+            request.session["scroll"] = None;
+            print(context["scroll"])
+
          
         if request.method == 'POST':
             #initital values
@@ -148,11 +163,43 @@ def home(request):
                         update = Goal.objects.get(id=ticked)
                         update.completed = True
                         update.save()
+            elif form_name == "add-temp":
+                temp_goal = TempGoalForm(posted_form)
+                print("before")
+                print(temp_goal)
+                if temp_goal.is_valid():
+                    print("after")
+                    cleaned = temp_goal.cleaned_data
+                    print(cleaned)
+                    parent_id = cleaned.get("parent")
+                    depth_id = cleaned.get("depth_id") + 1
+                    temp_string = "New Goal Placeholder"
+
+                    yPos = cleaned.get("scrollYpos")
+                    xPos = cleaned.get("scrollXpos")
+                    
+                    scroll_pos = { 
+                        "xPos": xPos , 
+                        "yPos": yPos,
+                        "parent":parent_id
+                        }
+                    request.session["scroll"] = scroll_pos
+                    # print(parent_id)
+                    for e in context["goals"]:
+                        if e.goal.id == parent_id:
+                            parent = e.goal
+                            break
+
+                    temp = Goal(content=temp_string, parent=parent, depth_id=depth_id, user_id=request.user.id)
+
+                    temp.save()
+                    temp_goal = Goal.objects.order_by('-id')[0]
+                    scroll_pos["id"] = temp_goal.id
+                    
+
             elif form_name == "edit-goal":
                 edit_form = EditForm(posted_form)
-                print("trying")
                 if edit_form.is_valid():
-                    print("editing")
                     print(edit_form.cleaned_data)
                     _id = edit_form.cleaned_data.get('id')
                     new_goal = edit_form.cleaned_data.get('new_goal')
@@ -177,7 +224,7 @@ def home(request):
                     new_goal.save()
 
             return redirect(home)
-                
+     
         return render(request, 'goals/goal.html', context)
 
 # user can request a goal by its id and receive all its info and its children and their info and children

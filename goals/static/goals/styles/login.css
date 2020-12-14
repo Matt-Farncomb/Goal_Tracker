@@ -5,6 +5,10 @@ body {
     height: 100vh;
     
   }
+
+  .plusForm {
+    width: 3em;
+  }
   
   #form-box {
     margin-top: 120px;

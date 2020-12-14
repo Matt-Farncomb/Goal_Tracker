@@ -9,6 +9,8 @@
 
 {% block content %}
 
+{{ scroll|json_script:"scroll" }}
+
 {{ form.errors }}   
 {{ form.non_field_errors }}
 
@@ -53,8 +55,15 @@
                                 <input type="number" name="delete" value="{{ e.id }}" hidden>x</input> <!-- Delete goal and all sub classes -->
                             </button>
                         </form> 
-                        <button class="plus btn btn-outline-secondary plus circle"><i class="fas fa-plus"></i></button> <!-- Add a new goal below, slightly indented, as input field -->
-                    
+                        <form method="POST" name="plusForm" class="plusForm">
+                            {% csrf_token %}  
+                            <input type="hidden" name="name" value="add-temp">                
+                            <input class="parent_id_input" type="number" name="parent" value="{{ e.id }}" hidden> 
+                            <input type="number" name="scrollYpos" value="1" hidden> 
+                            <input type="number" name="scrollXpos" value="0" hidden> 
+                            <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}" hidden>   
+                            <button type="submit" class="plus btn btn-outline-secondary plus circle"><i class="fas fa-plus"></i></button> <!-- Add a new goal below, slightly indented, as input field -->
+                        </form>
                         {% comment %} <div id="goal-entry">
                             <form id="goal-form" class="inserted_goal" method="POST">
                                 {% csrf_token %}  
