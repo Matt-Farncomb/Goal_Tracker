@@ -1,5 +1,5 @@
 nyer_tracker/__pycache__/
 TODO.md
-goals/migrations/
 goals/__pycache__/
 db.sqlite3
+*.pyc
