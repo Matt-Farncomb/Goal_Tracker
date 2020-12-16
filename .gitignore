@@ -2,3 +2,4 @@ nyer_tracker/__pycache__/
 TODO.md
 goals/__pycache__/
 *.pyc
+.env
