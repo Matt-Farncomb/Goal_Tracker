@@ -20,17 +20,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'f0qg=c@e3ej486s9v_)01&fm$vm6f8$g38q5a4*rj0oh!bs17h'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["goal-tracker-101.herokuapp.com", "127.0.0.1", "nexed.herokuapp.com"]
 
 
 # CORS_ORIGIN_ALLOW_ALL = True
-
 
 
 # Application definition
