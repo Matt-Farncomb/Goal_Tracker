@@ -27,6 +27,8 @@ class DeleteForm(forms.Form):
 
 class TickForm(forms.Form):
     tick = forms.CharField(label="tick", max_length=100)
+    scrollYpos = forms.IntegerField(label='scrollYpos')
+    scrollXpos = forms.IntegerField(label='scrollXpos')
 
 class LoginForm(forms.Form):
     username = forms.CharField(label="username", max_length=20)

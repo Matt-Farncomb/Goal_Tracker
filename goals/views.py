@@ -153,7 +153,8 @@ def home(request):
             depth_id = 1  
             posted_form = request.POST
             form_name = posted_form.get('name')
-            
+            print("posting")
+            print(posted_form)
             # delete selected item from database
             if form_name == "delete":
                 delete_form = DeleteForm(posted_form)
@@ -166,6 +167,18 @@ def home(request):
                     if tick_form.is_valid():
                         ticked = tick_form.cleaned_data.get('tick')
                         update = Goal.objects.get(id=ticked)
+                        print("ticking")
+
+                        yPos = tick_form.cleaned_data.get("scrollYpos")
+                        xPos = tick_form.cleaned_data.get("scrollXpos")
+
+                        scroll_pos = { 
+                            "xPos": xPos, 
+                            "yPos": yPos
+                            }
+                        
+                        request.session["scroll"] = scroll_pos
+
                         update.completed = True
                         update.save()
             elif form_name == "un-tick":
@@ -176,17 +189,32 @@ def home(request):
                     ticked = tick_form.cleaned_data.get('tick')
                     print(ticked)
                     update = Goal.objects.get(id=ticked)
+
+                    yPos = tick_form.cleaned_data.get("scrollYpos")
+                    xPos = tick_form.cleaned_data.get("scrollXpos")
+
+                    scroll_pos = { 
+                        "xPos": xPos, 
+                        "yPos": yPos
+                        }
+                        
+                    request.session["scroll"] = scroll_pos
+
+                    print(f":) {request.session['scroll']}")
+
                     update.completed = False
                     update.save()
+
             elif form_name == "add-temp":
                 temp_goal = TempGoalForm(posted_form)
                 print("before")
                 print(temp_goal)
                 if temp_goal.is_valid():
-                    print("after")
+                    
                     cleaned = temp_goal.cleaned_data
                     print(cleaned)
                     parent_id = cleaned.get("parent")
+                    print(f"parent_id {parent}")
                     depth_id = cleaned.get("depth_id") + 1
                     temp_string = "New Goal Placeholder"
 

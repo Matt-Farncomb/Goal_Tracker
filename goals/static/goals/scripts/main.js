@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("adding")
         e.onsubmit = addScrollValues;
     }
+
     
 
     let input = document.querySelector("#add-goal-input-box");
@@ -50,16 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
 function addScrollValues(e) {
     // e.preventDefault();
     
-    const cont = document.querySelector(".container");
+    let cont = document.querySelector(".container");
+    
     e.target.elements["scrollYpos"].value = cont.scrollTop;
     e.target.elements["scrollXpos"].value = cont.scrollLeft;
-    console.log(e.target.elements["scrollYpos"].value);
+
+
+    // console.log(e.target.elements["scrollYpos"].value);
     
 }
 
 function getIntFromId(element) {
     const id_element = element.id.split(' ')[1]; 
     const id = id_element.split('-')[1];
+    console.log(`id ${id}`);
     return id
 }
 
@@ -123,12 +128,17 @@ function disable(element) {
     if (!element.classList.contains("disabled")) { 
         // Make text content and add button greyed out
         // console.log(element);
-        element.nextElementSibling.nextElementSibling.style.opacity = "20%";
         
-        element.nextElementSibling.nextElementSibling.disabled = true;
+        element.parentElement.parentElement.parentElement.parentElement = "20%";
+        element.parentElement.parentElement.parentElement.disabled = true;
+        element.parentElement.parentElement.parentElement.parentElement = "20%";
+        // element.nextElementSibling.nextElementSibling.style.opacity = "20%";
         
-        element.parentElement.previousElementSibling.style.opacity = "20%";
+        // element.nextElementSibling.nextElementSibling.disabled = true;
+        
+        // element.parentElement.previousElementSibling.style.opacity = "20%";
         //hide tick and reveal cross
+        console.log(`eelement: ${element.nextElementSibling.classList}`)
         element.hidden = true;
         element.nextElementSibling.hidden = false;
         const plus = element.nextElementSibling.nextElementSibling;
@@ -144,8 +154,8 @@ function disable(element) {
 // when goal is added, will be added as a sub goal to the clicked goal
 function prepareToAddGoal(button, form_children) {
 
-    //get id
-    const parent = button.parentElement.parentElement.parentElement;
+    const parent = button.parentElement.parentElement.parentElement.parentElement;
+    console.log("pare: " + parent.classList);
     const parent_id = getIntFromId(parent);
     const depth_id = getValueFromClass(parent, "depth");
 

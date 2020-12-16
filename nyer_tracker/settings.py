@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -28,19 +29,25 @@ DEBUG = True
 ALLOWED_HOSTS = ["goal-tracker-101.herokuapp.com", "127.0.0.1"]
 
 
+# CORS_ORIGIN_ALLOW_ALL = True
+
+
+
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'goals.apps.GoalsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -48,8 +55,12 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
+
+# CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:8000"]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'nyer_tracker.urls'
 
