@@ -39,13 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
     cont.scrollTop = scrollPos.yPos;
     cont.scrollLeft = scrollPos.xPos;
     
-    
-    const getById = `#id_${scrollPos.id}`;
-    const newGoal =  document.querySelector(getById);
-    newGoal.value = "";
-    newGoal.focus();
-  
-    console.log(newGoal);
+    if (scrollPos.hasOwnProperty("id")) {
+        const getById = `#id_${scrollPos.id}`;
+        const newGoal =  document.querySelector(getById);
+        newGoal.value = "";
+        newGoal.focus();
+    }
 });
 
 function addScrollValues(e) {
@@ -132,8 +131,14 @@ function disable(element) {
         //hide tick and reveal cross
         element.hidden = true;
         element.nextElementSibling.hidden = false;
+        const plus = element.nextElementSibling.nextElementSibling;
+        plus.classList.add("hidden");
+        plus.nextElementSibling.classList.remove("hidden");
+        
     } 
 }
+
+
 
 // change focus to be on text input box 
 // when goal is added, will be added as a sub goal to the clicked goal
@@ -293,6 +298,8 @@ function allocateArrow(goal) {
     arrow.className = goal.closed ? "fas fa-arrow-down" : "fas fa-arrow-up";
 }
 
+
+
 function organiseDOM(list) {
     
     const items = document.querySelectorAll('.item'); // each individual item
@@ -354,13 +361,14 @@ function close(data) {
 }
 
 function postEdit(e) {
-    const cont = document.querySelector(".container");
     // send scroll position to server
     // server will add scroll position to session
     // django renders the session[scrollPos] as json thingy
     // adjust screen to that position on load
     
-    e.preventDefault()
+    e.preventDefault();
+    e.target.children[3].blur();
+
     const value = e.target.children[3].value
 
     data = {

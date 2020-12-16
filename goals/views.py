@@ -31,7 +31,9 @@ def register(request):
             # firstname = form.cleaned_data.get('firstname'),
             # lastname = form.cleaned_data.get('lastname')
         )
+        
         new_user.save()
+
 
 
 
@@ -44,7 +46,7 @@ def register(request):
         # new_user.save()
         
         
-        return redirect(login)
+        return redirect(login, message="success")
     else:
         print("invalid")
 
@@ -77,6 +79,9 @@ def login(request, message=None):
         "message": "Welcome!",
         "submit_label": "Login"
     }
+
+    if message != None:
+        context["message"] = "Successfuly registered"
 
     return auth(request, context)
 
@@ -136,7 +141,7 @@ def home(request):
             "max_goal_length":max_goal_length
         }
 
-        if request.session["scroll"] != None:
+        if "scroll" in request.session and request.session["scroll"] != None:
             context["scroll"] = request.session["scroll"]
             request.session["scroll"] = None;
             print(context["scroll"])
@@ -163,6 +168,16 @@ def home(request):
                         update = Goal.objects.get(id=ticked)
                         update.completed = True
                         update.save()
+            elif form_name == "un-tick":
+                print("un ticking")
+                tick_form = TickForm(posted_form)
+                if tick_form.is_valid():
+                    print("valid un ticking")
+                    ticked = tick_form.cleaned_data.get('tick')
+                    print(ticked)
+                    update = Goal.objects.get(id=ticked)
+                    update.completed = False
+                    update.save()
             elif form_name == "add-temp":
                 temp_goal = TempGoalForm(posted_form)
                 print("before")
