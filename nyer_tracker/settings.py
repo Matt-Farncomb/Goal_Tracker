@@ -135,22 +135,21 @@ USE_TZ = True
 # this is the statics files context path when request the static file in url. for example http://127.0.0.1:8000/static/js/jquery-3.3.1.min.js
 
 
-""" STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'statics'),
-]
- """
-
 AUTH_USER_MODEL = "goals.UserProfile"
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'goals')
 
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
+    
 )
 
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+GOALS_URL = '/goals/'
+GOALS = os.path.join(BASE_DIR, 'goals')
+
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
