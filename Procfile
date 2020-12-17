@@ -1,1 +1,1 @@
-web: python manage.py collectstatic --noinput; gunicorn nyer_tracker.wsgi --log-file - --log-level debug
+web: gunicorn nyer_tracker.wsgi --log-file -
