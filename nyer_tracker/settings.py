@@ -133,7 +133,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 # this is the statics files context path when request the static file in url. for example http://127.0.0.1:8000/static/js/jquery-3.3.1.min.js
-STATIC_URL = '/static/'
+
 
 """ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'statics'),
@@ -143,3 +143,9 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = "goals.UserProfile"
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
