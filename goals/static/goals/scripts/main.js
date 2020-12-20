@@ -370,32 +370,47 @@ function close(data) {
     })
 }
 
-function postEdit(e) {
-    // send scroll position to server
-    // server will add scroll position to session
-    // django renders the session[scrollPos] as json thingy
-    // adjust screen to that position on load
+// Post form data to server and remove focus from form
+function postEdit(form) {
     
-    e.preventDefault();
-    e.target.children[3].blur();
+    form.preventDefault();
+    form.target.elements["new_goal"].blur();
 
-    const value = e.target.children[3].value
+    // creates a text string in standard URL-encoded notation of the form values
+    const serializedFrom = $(this).serialize();
+    $.post("", serializedFrom);
 
-    data = {
-        "id":e.target.children[2].value,
-        "goal":value
-    }
+    // e.target.children[3].blur();
+    // const value = e.target.children[3].value
+
+    // const editForm = document.forms["editForm"]
+
+    // data = {
+    //     "id":e.target.children[2].value,
+    //     "goal":value
+    // }
+
+    // console.log($(this).serialize());
+
+   
+        
+
+    // console.log(bobby);
+    // var loginForm = document.forms["editForm"];
+    // console.log(loginForm);
 
     // console.log(data);
 
-    $.ajax({
-        url:'',
-        type:'POST',
-        data: {
-            "edit_data": JSON.stringify(data),
-            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value },
-        dataType: 'json'
-    })
+    
+
+    // $.ajax({
+    //     url:'',
+    //     type:'POST',
+    //     data: {
+    //         "edit_data": JSON.stringify(data),
+    //         csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value },
+    //     dataType: 'json'
+    // })
 }
 
 

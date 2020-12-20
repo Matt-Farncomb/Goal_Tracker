@@ -1,6 +1,7 @@
 from django import forms
 
 
+
 max_goal_length = 60
 
 
@@ -39,3 +40,5 @@ class RegisterForm(forms.Form):
     password = forms.CharField(label="passowrd", max_length=20)
     firstname = forms.CharField(label="firstname", max_length=20)
     lastname = forms.CharField(label="lastname", max_length=20)
+
+ 

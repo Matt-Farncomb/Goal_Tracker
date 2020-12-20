@@ -5,6 +5,7 @@ from django.core import serializers
 from django.forms.models import model_to_dict  
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth.password_validation  import validate_password
 from django.urls import reverse
 # from django.contrib.auth.models import User as DjangoUser
 
@@ -14,48 +15,58 @@ from .helpers import flattenChildren, match_child_with_parent, Goal_Item, get_ch
 import json 
 
 
-def register(request):
-    form = RegisterForm(request.POST)
-    if form.is_valid():
-        # print("valid")
-        # username = form.cleaned_data.get('username')
-        # password = form.cleaned_data.get('password')
-        # firstname = form.cleaned_data.get('firstname')
-        # lastname = form.cleaned_data.get('lastname')
+# def handler404(request, exception):
+#     return render(request, '404.html', status=404)
 
-        new_user = UserProfile.objects.create_user(
-            username =form.cleaned_data.get('username'),
-            password = form.cleaned_data.get('password'),
-            first_name = form.cleaned_data.get('firstname'),
-            last_name = form.cleaned_data.get('lastname'),
-            # firstname = form.cleaned_data.get('firstname'),
-            # lastname = form.cleaned_data.get('lastname')
-        )
-        
-        new_user.save()
+def register(request, failed_form=None):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
 
+            cleaned = form.cleaned_data
 
+            username = cleaned.get('username')
+            firstname = cleaned.get('firstname')
+            lastname = cleaned.get('lastname')
+            password = cleaned.get('password')
 
+            new_user, created = UserProfile.objects.get_or_create(
+                username = username,
+                defaults = { "first_name":firstname, "last_name":lastname }
+            )
+            
+            if created:
+                try:
+                    validate_password(password)
+                except Exception as exception:
+                   
+                    context = {
+                        "form":cleaned,
+                        "message": exception,
+                        "submit_label":"Register"
+                    }
 
-        # print(f"username: {username} password: {password} firstname: {firstname} lastname: {lastname}")
+                    return render(request, 'goals/register.html', context)
+                new_user.set_password(password)
+                new_user.save()
+                return redirect(login, message="success")
+            else:
+                print("unique contraint")
 
-        # new_user = User(
-        #     username=username, password=password, 
-        #     firstname=firstname, lastname=lastname
-        #     )
-        # new_user.save()
-        
-        
-        return redirect(login, message="success")
+                context = {
+                    "form":cleaned,
+                    "message": "Username already exists",
+                    "submit_label":"Register"
+                }
+                return render(request, 'goals/register.html', context)
+        else:
+            print("invalid")
     else:
-        print("invalid")
-
-    context = { 
-            "message": "Welcome!",
-            "submit_label": "Register"
-        }
-
-    return render(request, 'goals/register.html', context)
+        context = { 
+                "message": "Welcome!",
+                "submit_label": "Register"
+            }
+        return render(request, 'goals/register.html', context)
 
 def auth(request, context):
     form = LoginForm(request.POST)
@@ -101,15 +112,27 @@ def home(request):
     # when goals are closed or opened
     if request.is_ajax() and request.method == "POST":
 
-        
-        if (request.POST.get('edit_data') != None):
-            data = json.loads(request.POST.get('edit_data'))
-            _id = data["id"]
-            edited_gaol = data["goal"]
-            update = Goal.objects.get(id=_id)
-            update.content = edited_gaol
-            update.save()
-        elif (request.POST.get('data') != None):
+        posted_form = request.POST
+        form_name = posted_form.get('name')
+        if form_name == "edit-goal":
+            edit_form = EditForm(posted_form)
+            if edit_form.is_valid():
+                print(edit_form.cleaned_data)
+                _id = edit_form.cleaned_data.get('id')
+                new_goal = edit_form.cleaned_data.get('new_goal')
+                update = Goal.objects.get(id=_id)
+                update.content = new_goal
+                update.save()
+            else:
+                print("invalid")
+        # if (request.POST.get('edit_data') != None):
+        #     data = json.loads(request.POST.get('edit_data'))
+        #     _id = data["id"]
+        #     edited_gaol = data["goal"]
+        #     update = Goal.objects.get(id=_id)
+        #     update.content = edited_gaol
+        #     update.save()
+        if (request.POST.get('data') != None):
             data = json.loads(request.POST.get('data'))
             hidden = data["hidden"]
             to_hide = Goal.objects.get(id=data["child_id"])

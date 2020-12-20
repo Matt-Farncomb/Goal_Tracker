@@ -32,7 +32,7 @@
             <li id="inserted_goal_{{ e.count }} item-{{ e.id }}" class="goal parent_id_{{ e.parent.id }} item depth_id_{{ e.depth_id }} hidden_{{e.hidden}} closed_{{e.closed}} completed_{{ e.completed }}">
                 <div class="item-container">
                 
-                    <form class="edit-goal-form" method="POST">
+                    <form class="edit-goal-form" name="editForm" method="POST">
                     {% csrf_token %}  
                         <input name="name" value="edit-goal" hidden>                
                         {% comment %} <input class="parent_id_input" type="number" name="parent" hidden> 

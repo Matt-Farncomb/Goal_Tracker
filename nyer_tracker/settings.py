@@ -138,14 +138,17 @@ USE_TZ = True
 AUTH_USER_MODEL = "goals.UserProfile"
 
 STATIC_URL = '/static/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'goals')
 
+print(f"STATIC_ROOT :{STATIC_ROOT}")
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
     
 )
+print(f"STATICFILES_DIRS :{STATICFILES_DIRS}")
 
 GOALS_URL = '/goals/'
 GOALS = os.path.join(BASE_DIR, 'goals')
