@@ -7,49 +7,66 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector("#new-goal-form");
     const editForms = document.querySelectorAll(".edit-goal-form");
     const plusForms = document.querySelectorAll(".plusForm")
+    const deleteForms = document.querySelectorAll(".cross.circle");
     let formChildren = form.children;
     
     addClickEvent(disable, '.tick');
-    addClickEvent(prepareToAddGoal, '.plus', formChildren);
+    // addClickEvent(prepareToAddGoal, '.plus', formChildren);
     addClickEvent(showHideChildren, '#arrow_button', goalArr);
     organiseDOM(goalArr);  
     applyCorrectFormValues(formChildren);
 
     form.onsubmit = validate;
+    //// console.log(deleteForms);
+
+    
 
     for (let e of editForms) {
         e.onsubmit = postEdit;
     }
 
     for (let e of plusForms) {
-        console.log("adding")
+        // // console.log(e)
         e.onsubmit = addScrollValues;
+    }
+
+    for (let e of deleteForms) {
+        e.onsubmit = addScrollValues;
+        //// console.log(e);
     }
 
     
 
     let input = document.querySelector("#add-goal-input-box");
-    // console.log(input);
+    // // console.log(input);
 
     input.addEventListener('keyup', (event) => {
         countGoal(event);
     })
 
     const cont = document.querySelector(".container");
-    console.log(cont.scrollLeft, cont.scrollTop);
-    cont.scrollTop = scrollPos.yPos;
-    cont.scrollLeft = scrollPos.xPos;
+    //// console.log(cont.scrollLeft, cont.scrollTop);
+    // cont.scrollTop = scrollPos.yPos;
+    // cont.scrollLeft = scrollPos.xPos;
+    // cont.scrollTo(scrollPos.yPos, scrollPos.xPos)
+    cont.scrollTo(scrollPos.xPos, scrollPos.yPos)
     
     if (scrollPos.hasOwnProperty("id")) {
         const getById = `#id_${scrollPos.id}`;
         const newGoal =  document.querySelector(getById);
         newGoal.value = "";
         newGoal.focus();
+        //// console.log(scrollPos.xPos, scrollPos.yPos)
+        cont.scrollTo(scrollPos.xPos, scrollPos.yPos)
+        newGoal.scrollIntoView({block: 'start', behavior: 'smooth'});
+
+      
     }
+
 });
 
 function addScrollValues(e) {
-    // e.preventDefault();
+    // console.log("farty");
     
     let cont = document.querySelector(".container");
     
@@ -57,14 +74,14 @@ function addScrollValues(e) {
     e.target.elements["scrollXpos"].value = cont.scrollLeft;
 
 
-    // console.log(e.target.elements["scrollYpos"].value);
+    // console.log(e.target.elements["scrollYpos"]);
     
 }
 
 function getIntFromId(element) {
     const id_element = element.id.split(' ')[1]; 
     const id = id_element.split('-')[1];
-    console.log(`id ${id}`);
+    // console.log(`id ${id}`);
     return id
 }
 
@@ -127,7 +144,7 @@ function checkFocus(elementToCheck, func){
 function disable(element) {
     if (!element.classList.contains("disabled")) { 
         // Make text content and add button greyed out
-        // console.log(element);
+        // // console.log(element);
         
         element.parentElement.parentElement.parentElement.parentElement = "20%";
         element.parentElement.parentElement.parentElement.disabled = true;
@@ -138,7 +155,7 @@ function disable(element) {
         
         // element.parentElement.previousElementSibling.style.opacity = "20%";
         //hide tick and reveal cross
-        console.log(`eelement: ${element.nextElementSibling.classList}`)
+        // // console.log(`eelement: ${element.nextElementSibling.classList}`)
         element.hidden = true;
         element.nextElementSibling.hidden = false;
         const plus = element.nextElementSibling.nextElementSibling;
@@ -152,38 +169,53 @@ function disable(element) {
 
 // change focus to be on text input box 
 // when goal is added, will be added as a sub goal to the clicked goal
-function prepareToAddGoal(button, form_children) {
+// function prepareToAddGoal(button, form_children) {
 
-    const parent = button.parentElement.parentElement.parentElement.parentElement;
-    console.log("pare: " + parent.classList);
-    const parent_id = getIntFromId(parent);
-    const depth_id = getValueFromClass(parent, "depth");
+//     const parent = button.parentElement.parentElement.parentElement.parentElement;
+//     // console.log("pare: " + parent.classList);
+//     const parent_id = getIntFromId(parent);
+//     const depth_id = getValueFromClass(parent, "depth");
 
-    // - change form id and depth to necessary values
-    for (const child of form_children) {
-        if (child.name == "parent") {
-            child.setAttribute("value", parent_id);
-        }
-        else if (child.name == "depth_id") {
-            child.setAttribute("value", depth_id);
-        }
-        else if (child.name == "new_goal"){
-            child.focus();  // jump cursor to text input box 
-        }
-    }
-}
+//     // - change form id and depth to necessary values
+//     for (const child of form_children) {
+//         if (child.name == "parent") {
+//             child.setAttribute("value", parent_id);
+//         }
+//         else if (child.name == "depth_id") {
+//             child.setAttribute("value", depth_id);
+//         }
+//         else if (child.name == "new_goal"){
+//             child.focus();  // jump cursor to text input box 
+//         }
+//     }
+// }
 
 
 //when button is clicked on, hide/show all children
 function showHideChildren(button, list) {
-    // console.log(button.previousElementSibling.children[4]);
+    
+    // // console.log(button.previousElementSibling.children[4]);
     // let id = button.previousElementSibling.children[4].id.split('_')[1]; 
     let id  = button.previousElementSibling.children[2].value;
     for (const parent of list) {
-        // console.log(button.previousElementSibling);
+        const newForm = new FormData();
+        
+        formDict = {
+            "parent_id":new Set(),
+            "child_id":new Set(),
+            "hidden":[]
+        }
+        // // console.log(button.previousElementSibling);
         if (id === parent.id) {
-            
-            hideElements(parent, parent.children, parent.closed);
+            hideElements(parent, parent.children, parent.closed, formDict);
+            newForm.append("name", "closeForm");
+            newForm.append("parent_id", Array.from(formDict["parent_id"]));
+            newForm.append("child_id", Array.from(formDict["child_id"]));
+            newForm.append("hidden", !parent.closed);
+            newForm.append("csrfmiddlewaretoken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+            console.log(formDict["child_id"])
+            close(newForm);
+
             parent.closed = !parent.closed;
             
             allocateArrow(parent);
@@ -212,7 +244,14 @@ function showHideChildren(button, list) {
 
 
 //recursively hide/show all elements in arr
-function hideElements(parent, arr, closed) {
+function hideElements(parent, arr, closed, formDict) {
+
+
+    closeList = []
+
+
+    // const newForm = new FormData();
+
     for (child of arr) {
 
         data = {
@@ -221,29 +260,60 @@ function hideElements(parent, arr, closed) {
             "hidden": !closed
         } 
 
+        // const form = new FormData();
+        // form.append("name", "closeForm");
+
+        // form.append("parent_id", parent.id);
+        formDict["parent_id"].add(parent.id)
+        // console.log(child.id)
+        // form.append("child_id", child.id);
+        // newForm.append("child_id", child.id);
+        formDict["child_id"].add(child.id)
+
+        // form.append("hidden", !closed);
+        formDict["hidden"].push(!closed)
+
+        // form.append("csrfmiddlewaretoken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+        //// console.log(form);
+
         // sends instructions to close/open to DB
-        close(data); 
+        // close(data); 
+        // close(form);
+        // closeList.push(form)
 
         if (closed) { // then open
             child.hiddenByParent = false;
             child.htmlElemment.style.display = "block";    
             if (!child.closed && child.children.length > 0) {
-                hideElements(child, child.children, true )       
+                hideElements(child, child.children, true, formDict )       
             } 
         }
         else { // then close all elemnts and their subs;
             child.hiddenByParent = true;
             child.htmlElemment.style.display = "none";
             if (child.children.length > 0) { 
-                hideElements(child, child.children, false );
+                hideElements(child, child.children, false, formDict );
             }  
         } 
     }
+
+    // close(form);
+    // console.log("once")
+    // const newForm = new FormData();
+    // newForm.append("name", "closeForm");
+    // newForm.append("parent_id", formDict["parent_id"]);
+    // // newForm.append("child_id", formDict["child_id"]);
+    // newForm.append("hidden", formDict["hidden"][0]);
+    // newForm.append("csrfmiddlewaretoken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
+    // console.log(formDict["child_id"])
+    // close(newForm);
+
+
 }
 
 // position goal items on the DOM according to their depth
 function alignItem(item, row_number, childCount) {
-    // console.log(item.children[0].children[0].children[0]);
+    // // console.log(item.children[0].children[0].children[0]);
     // retrieve required item depth
     // const item_class = item.className;
     let item_depth = getValueFromClass(item, "depth");
@@ -304,7 +374,7 @@ function allocateArrow(goal) {
     // let span = goal.getSpan();
     // span.firstElementChild.className = goal.closed ? "fas fa-arrow-down" : "fas fa-arrow-up";
     let arrow = goal.htmlElemment.children[0].children[1].children[0];
-    // console.log(arrow);
+    // // console.log(arrow);
     arrow.className = goal.closed ? "fas fa-arrow-down" : "fas fa-arrow-up";
 }
 
@@ -342,7 +412,7 @@ function organiseDOM(list) {
     for (e of list) {
         // e.getSpan().innerHTML += "  " + e.numberOfChildren();
         let span = e.htmlElemment.children[0].children[1].children[1];
-        // console.log("span is:" + span.innerHTML);
+        // // console.log("span is:" + span.innerHTML);
         span.innerHTML += "  " + e.numberOfChildren();
 
         
@@ -358,16 +428,33 @@ function flatteGoals(child_arr, children) {
     return child_arr;
 }
 
-function close(data) {
+function close(form) {
+
+    // const serializedFrom = $(form).serialize();
+    // // console.log(serializedFrom);
+    // $.post("", form);
+    
 
     $.ajax({
-        url:'',
-        type:'POST',
-        data: { 
-            "data": JSON.stringify(data),
-            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value },
-        dataType: 'json'
-    })
+        type: "POST",
+        url: "",
+        data: form,
+        processData: false,
+        contentType: false
+      });
+
+     
+
+
+    //todo: Sue $.post() and send as FormData
+    // $.ajax({
+    //     url:'',
+    //     type:'POST',
+    //     data: { 
+    //         "data": JSON.stringify(data),
+    //         csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value },
+    //     dataType: 'json'
+    // })
 }
 
 // Post form data to server and remove focus from form
@@ -390,16 +477,16 @@ function postEdit(form) {
     //     "goal":value
     // }
 
-    // console.log($(this).serialize());
+    // // console.log($(this).serialize());
 
    
         
 
-    // console.log(bobby);
+    // // console.log(bobby);
     // var loginForm = document.forms["editForm"];
-    // console.log(loginForm);
+    // // console.log(loginForm);
 
-    // console.log(data);
+    // // console.log(data);
 
     
 

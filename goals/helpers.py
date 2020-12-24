@@ -1,5 +1,6 @@
 from django.forms.models import model_to_dict
 from .models import Goal
+from .forms import *
 
 class Goal_Item:
 
@@ -57,7 +58,120 @@ def get_children(id, children):
         )
     return children
 
-# def str_to_bool(string):
-#     print(string)
-#     # return True if string == "true" else False
-#     return string
+def str_to_bool(string):
+    return True if string == "true" else False
+
+def validate_form(form):
+    if form.is_valid():
+        return form.cleaned_data
+
+def ordered_goals(user_id):
+    goals_query = Goal.objects.filter(user_id=user_id ).order_by("parent") 
+    matched_list = match_child_with_parent(goals_query) 
+
+    flattened_list = []
+    
+    # get a list of all goals in the order they will be on the DOM
+    for child in matched_list:   
+        flattened_list = flattenChildren(child, flattened_list)
+
+    return flattened_list
+
+def create_home_context(request, max_goal_length):
+    context =  {
+        "username": request.user,
+        "goals":ordered_goals(request.user.id),
+        "max_goal_length":max_goal_length
+    }
+
+    return context
+
+def process_edit_form(posted_form):
+    cleaned = validate_form(EditForm(posted_form))
+    _id = cleaned.get('id')
+    new_goal = cleaned.get('new_goal')
+    update = Goal.objects.get(id=_id)
+    update.content = new_goal
+    update.save()
+
+def process_close_form(posted_form):
+    cleaned = validate_form(CloseForm(posted_form)) 
+    child_ids = cleaned.get("child_id").split(",")
+    parent_ids = cleaned.get("parent_id").split(",")
+    hide = cleaned.get("hidden")
+    print(parent_ids)
+    for e in child_ids:
+        # print(f"hide: {e}")
+        to_hide = Goal.objects.get(id=e)
+        to_hide.hidden = str_to_bool(hide)
+        to_hide.save()
+    for e in parent_ids:
+        # print(f"close: {e}")
+        to_close = Goal.objects.get(id=e)
+        to_close.closed = str_to_bool(hide)
+        to_close.save()
+
+
+def process_delete_form(posted_form, request):
+    cleaned = validate_form(DeleteForm(posted_form))
+    unwanted_goal_id = cleaned.get('delete')
+    yPos = cleaned.get("scrollYpos")
+    xPos = cleaned.get("scrollXpos")
+    scroll_pos = { "xPos": xPos, "yPos": yPos }
+    request.session["scroll"] = scroll_pos
+    print(scroll_pos)
+    Goal.objects.filter(id=unwanted_goal_id).delete()
+
+def process_tick_form(posted_form, request, is_ticked):
+    cleaned = validate_form(TickForm(posted_form))
+    ticked = cleaned.get('tick')
+    update = Goal.objects.get(id=ticked)
+    yPos = cleaned.get("scrollYpos")
+    xPos = cleaned.get("scrollXpos")
+
+    scroll_pos = { "xPos": xPos, "yPos": yPos }
+
+    request.session["scroll"] = scroll_pos
+    update.completed = is_ticked
+    update.save()
+
+def process_temp_form(posted_form, context, request):
+    cleaned = validate_form(TempGoalForm(posted_form))
+    parent_id = cleaned.get("parent")
+    depth_id = cleaned.get("depth_id") + 1
+    temp_string = "New Goal Placeholder"
+
+    scroll_pos = { 
+        "xPos": cleaned.get("scrollXpos"),
+        "yPos": cleaned.get("scrollYpos"),
+        "parent":parent_id
+        }
+
+    request.session["scroll"] = scroll_pos
+
+    for e in context["goals"]:
+        if e.goal.id == parent_id:
+            parent = e.goal
+            break
+
+    temp = Goal(content=temp_string, parent=parent, depth_id=depth_id, user_id=request.user.id)
+
+    temp.save()
+    temp_goal = Goal.objects.order_by('-id')[0]
+    scroll_pos["id"] = temp_goal.id
+
+def process_goal_form(posted_form, context, request, parent):
+    cleaned = validate_form(GoalForm(posted_form))
+   
+    new_goal = cleaned.get('new_goal')
+    parent_id = cleaned.get('parent')
+    # gets the depth id from depth of clicked on, then indents its depth 1 more
+    depth_id = cleaned.get('depth_id') + 1 
+    
+    for e in context["goals"]:
+        if e.goal.id == parent_id:
+            parent = e.goal
+            break
+
+    new_goal = Goal(content=new_goal, parent=parent, depth_id=depth_id, user_id=request.user.id)
+    new_goal.save()

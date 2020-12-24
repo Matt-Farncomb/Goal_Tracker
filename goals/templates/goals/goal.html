@@ -56,10 +56,12 @@
                         </form>   
                         <form method="POST" class="cross circle" hidden>
                             {% csrf_token %} 
-                            <input type="hidden" name="name" value="delete">
+                            <input class="delete-input" type="hidden" name="name" value="delete">
                             <button id="delete-button" type="submit" value="Submit" class="btn btn-outline-danger circle" >
                                 <input type="number" name="delete" value="{{ e.id }}" hidden>x</input> <!-- Delete goal and all sub classes -->
                             </button>
+                            <input type="number" name="scrollYpos" value="1" hidden> 
+                            <input type="number" name="scrollXpos" value="0" hidden> 
                         </form> 
                         <form method="POST" name="plusForm" class="plusForm">
                             {% csrf_token %}  
