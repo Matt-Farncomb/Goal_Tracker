@@ -1,81 +1,65 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // received from server
     const scrollPos = JSON.parse(document.getElementById('scroll').textContent);
 
-
     let goalArr = [];
-    const form = document.querySelector("#new-goal-form");
-    const editForms = document.querySelectorAll(".edit-goal-form");
-    const plusForms = document.querySelectorAll(".plusForm")
-    const deleteForms = document.querySelectorAll(".cross.circle");
-    let formChildren = form.children;
+    const goalForm = document.querySelector("#new-goal-form");
+    const cont = document.querySelector(".container");
+    const editGoalForm = document.querySelectorAll(".edit-goal-form");
+    // const plusForm = document.querySelectorAll(".plusForm");
+    // const crossCircle = document.querySelectorAll(".cross.circle");
+        
+    // editGoalForm.forEach(e => e.onsubmit = postEdit);
+    // plusForm.forEach(e => e.onsubmit = () => addScrollValues(e, cont));
+    // crossCircle.forEach(e => e.onsubmit = () => addScrollValues(e, cont));
+
+    addEvent(".edit-goal-form", postEdit, 'submit', cont);
     
-    addClickEvent(disable, '.tick');
-    // addClickEvent(prepareToAddGoal, '.plus', formChildren);
-    addClickEvent(showHideChildren, '#arrow_button', goalArr);
+    addEvent(".plusForm", addScrollValues, 'submit', cont);
+    addEvent(".cross.circle", addScrollValues, 'submit', cont);
+    // addSubmitEvent(addScrollValues.bind(cont), ".plusForm");
+    addEvent(".scroll-arrow", scrollAcross, 'click', cont);
+    addEvent(".tick", disable, 'click');
+    addEvent("#arrow_button", showHideChildren, 'click', cont, goalArr);
+
+    // addClickEvent(scrollAcross.bind(cont), ".scroll-arrow");
+    // addClickEvent(disable, '.tick');
+    // addClickEvent(showHideChildren, '#arrow_button', goalArr);
     organiseDOM(goalArr);  
-    applyCorrectFormValues(formChildren);
+    applyCorrectFormValues(goalForm.children);
 
-    form.onsubmit = validate;
-    //// console.log(deleteForms);
+    goalForm.onsubmit = validate;
 
-    
-
-    for (let e of editForms) {
-        e.onsubmit = postEdit;
-    }
-
-    for (let e of plusForms) {
-        // // console.log(e)
-        e.onsubmit = addScrollValues;
-    }
-
-    for (let e of deleteForms) {
-        e.onsubmit = addScrollValues;
-        //// console.log(e);
-    }
-
-    
-
-    let input = document.querySelector("#add-goal-input-box");
-    // // console.log(input);
-
-    input.addEventListener('keyup', (event) => {
-        countGoal(event);
+    document.querySelector("#add-goal-input-box").addEventListener(
+        'keyup', (event) => {
+            countGoal(event);
     })
 
-    const cont = document.querySelector(".container");
-    //// console.log(cont.scrollLeft, cont.scrollTop);
-    // cont.scrollTop = scrollPos.yPos;
-    // cont.scrollLeft = scrollPos.xPos;
-    // cont.scrollTo(scrollPos.yPos, scrollPos.xPos)
     cont.scrollTo(scrollPos.xPos, scrollPos.yPos)
     
+    // when new goal was added, scroll animation to the new added goal
     if (scrollPos.hasOwnProperty("id")) {
         const getById = `#id_${scrollPos.id}`;
         const newGoal =  document.querySelector(getById);
         newGoal.value = "";
         newGoal.focus();
-        //// console.log(scrollPos.xPos, scrollPos.yPos)
+        // focus moves scroll to the focused element, so reverse that
         cont.scrollTo(scrollPos.xPos, scrollPos.yPos)
+        // then scroll smoothly to the focused element
         newGoal.scrollIntoView({block: 'start', behavior: 'smooth'});
-
-      
     }
-
 });
 
-function addScrollValues(e) {
-    // console.log("farty");
-    
-    let cont = document.querySelector(".container");
-    
-    e.target.elements["scrollYpos"].value = cont.scrollTop;
-    e.target.elements["scrollXpos"].value = cont.scrollLeft;
 
+function scrollAcross(e, cont) {
+    if (e.id == "left-scroll") cont.scrollLeft -= 20;      
+    else cont.scrollLeft += 20;
+}
 
-    // console.log(e.target.elements["scrollYpos"]);
-    
+function addScrollValues(e, cont) { 
+    e.target.elements["scrollYpos"].value = this[0].scrollTop;
+    e.target.elements["scrollXpos"].value = this[0].scrollLeft;
 }
 
 function getIntFromId(element) {
@@ -127,6 +111,22 @@ function addClickEvent(func, element, list) {
            func(ele, list);
     })
 )}
+
+/**
+ * Add 'event' that calls 'func' to all instances of 'element'
+ * @param {string} element HTML elements that will have the event added to them.
+ * @param {function} func Callback function to be added to element upon event.
+ * @param {string} event String of event.
+ * @param {HTMLElement} cont Html container the element is within.
+ * @param {Array<Goal>} arr Array of Goals.
+ */
+function addEvent(element, func, event, cont, arr) {
+    document.querySelectorAll(element).forEach(
+        e => e.addEventListener(event,  func.bind([cont, arr]) )
+    )
+}
+
+    
 
 // reset values of form to refer to the 0'th level
 function resetFormValues(element) {
@@ -192,11 +192,12 @@ function disable(element) {
 
 
 //when button is clicked on, hide/show all children
-function showHideChildren(button, list) {
+function showHideChildren(button, cont, list) {
     
     // // console.log(button.previousElementSibling.children[4]);
     // let id = button.previousElementSibling.children[4].id.split('_')[1]; 
-    let id  = button.previousElementSibling.children[2].value;
+    list = this[1];
+    let id  = button.target.parentElement.value;
     for (const parent of list) {
         const newForm = new FormData();
         
@@ -457,47 +458,17 @@ function close(form) {
     // })
 }
 
-// Post form data to server and remove focus from form
-function postEdit(form) {
-    
-    form.preventDefault();
-    form.target.elements["new_goal"].blur();
+// Post form data to server and remove focus frosm form
+function postEdit(e) {
+   
+    let form = e.target;
+    e.preventDefault();
+    e.target.elements["new_goal"].blur();
 
     // creates a text string in standard URL-encoded notation of the form values
-    const serializedFrom = $(this).serialize();
+    const serializedFrom = $(form).serialize();
     $.post("", serializedFrom);
 
-    // e.target.children[3].blur();
-    // const value = e.target.children[3].value
-
-    // const editForm = document.forms["editForm"]
-
-    // data = {
-    //     "id":e.target.children[2].value,
-    //     "goal":value
-    // }
-
-    // // console.log($(this).serialize());
-
-   
-        
-
-    // // console.log(bobby);
-    // var loginForm = document.forms["editForm"];
-    // // console.log(loginForm);
-
-    // // console.log(data);
-
-    
-
-    // $.ajax({
-    //     url:'',
-    //     type:'POST',
-    //     data: {
-    //         "edit_data": JSON.stringify(data),
-    //         csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value },
-    //     dataType: 'json'
-    // })
 }
 
 

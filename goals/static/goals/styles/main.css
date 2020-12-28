@@ -67,6 +67,7 @@ li {
 .container {
     display: grid;
     overflow: auto;
+    overflow-x: hidden;
 
     grid-template-columns: repeat(20, 5%);
     grid-template-rows:auto;
@@ -234,6 +235,13 @@ footer {
     min-height: 100px;
 }
 
+.scroll-arrow { 
+    width: 50%;
+    margin-bottom: 1em !important;
+    opacity: 0.35;
+    
+}
+
 #new-goal-entry-label {
     padding: 2.5em;
     
@@ -249,7 +257,7 @@ footer {
 
 #add-goal-input-box {
     background-color: var(--main-bg-color);
-    width: calc(100% - 5em);
+    width: calc(100% - 3.5em);
     border-color: #6c757d;    
    
 }
@@ -275,7 +283,7 @@ footer {
 }
 
 #enter-goal-nav{
-    padding-top: 2.5em;
+    padding-top: 2.25em;
     width: 100% !important;
     background-color: var(--main-bg-color);
 }
