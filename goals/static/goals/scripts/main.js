@@ -4,37 +4,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const scrollPos = JSON.parse(document.getElementById('scroll').textContent);
 
     let goalArr = [];
-    const goalForm = document.querySelector("#new-goal-form");
     const cont = document.querySelector(".container");
-    const editGoalForm = document.querySelectorAll(".edit-goal-form");
-    // const plusForm = document.querySelectorAll(".plusForm");
-    // const crossCircle = document.querySelectorAll(".cross.circle");
-        
-    // editGoalForm.forEach(e => e.onsubmit = postEdit);
-    // plusForm.forEach(e => e.onsubmit = () => addScrollValues(e, cont));
-    // crossCircle.forEach(e => e.onsubmit = () => addScrollValues(e, cont));
 
     addEvent(".edit-goal-form", postEdit, 'submit', cont);
-    
     addEvent(".plusForm", addScrollValues, 'submit', cont);
     addEvent(".cross.circle", addScrollValues, 'submit', cont);
-    // addSubmitEvent(addScrollValues.bind(cont), ".plusForm");
     addEvent(".scroll-arrow", scrollAcross, 'click', cont);
     addEvent(".tick", disable, 'click');
     addEvent("#arrow_button", showHideChildren, 'click', cont, goalArr);
+    addEvent(".title", countGoal, 'keyup');
+    addEvent("#add-goal-input-box", countGoal, 'keyup');
+    addEvent("#new-goal-form", validate, 'submit');
 
-    // addClickEvent(scrollAcross.bind(cont), ".scroll-arrow");
-    // addClickEvent(disable, '.tick');
-    // addClickEvent(showHideChildren, '#arrow_button', goalArr);
     organiseDOM(goalArr);  
-    applyCorrectFormValues(goalForm.children);
-
-    goalForm.onsubmit = validate;
-
-    document.querySelector("#add-goal-input-box").addEventListener(
-        'keyup', (event) => {
-            countGoal(event);
-    })
 
     cont.scrollTo(scrollPos.xPos, scrollPos.yPos)
     
@@ -51,26 +33,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
-function scrollAcross(e, cont) {
-    if (e.id == "left-scroll") cont.scrollLeft -= 20;      
-    else cont.scrollLeft += 20;
+/**
+ * Scroll to the left or right
+ * @param {Event} click Click event
+ */
+function scrollAcross(click) {
+    const scrollSpeed = 20;  
+    const container = this[0];
+    container.scrollLeft +=  (click.target.id == "left-scroll") ? -scrollSpeed : scrollSpeed
 }
 
-function addScrollValues(e, cont) { 
-    e.target.elements["scrollYpos"].value = this[0].scrollTop;
-    e.target.elements["scrollXpos"].value = this[0].scrollLeft;
+/**
+ * Update form of clicked on element with scroll pos values
+ * @param {Event} click Click event
+ */
+function addScrollValues(click) { 
+    click.target.elements["scrollYpos"].value = this[0].scrollTop;
+    click.target.elements["scrollXpos"].value = this[0].scrollLeft;
 }
 
+/**
+ * Get goal id from provided HTML element
+ * @param {HTMLElement} element
+ */
 function getIntFromId(element) {
     const id_element = element.id.split(' ')[1]; 
     const id = id_element.split('-')[1];
-    // console.log(`id ${id}`);
     return id
 }
 
-function countGoal(e) {
-    const target = e.target;
+/**
+ * Every key press, make sure value of form is below minimum length
+ * @param {Event} keyup Keyup event
+ */
+function countGoal(keyup) {
+    const target = keyup.target;
     const valueLength = target.value.length;
     if (valueLength >= target.maxLength) {
         if (!target.classList.contains("tooLong"))  target.classList.add("tooLong");
@@ -79,66 +76,41 @@ function countGoal(e) {
 
 }
 
-function validate(e) {
-    const newGoal = e.target.elements["new_goal"].value;
+/**
+ * Stop form value from submitting if length above maximum
+ * @param {Event} submit Submit event
+ */
+function validate(submit) {
+    const newGoal = submit.target.elements["new_goal"].value;
     const MAX_WORD_LENGTH = 29; // longest word in English
 
-    if (newGoal.length == 0)  e.preventDefault();
+    if (newGoal.length == 0)  submit.preventDefault();
     else if (newGoal.length > MAX_WORD_LENGTH) {
         const words =  newGoal.split(' ');
         words.forEach(word => {
             if (word.length > MAX_WORD_LENGTH) {
                 alert("Maximum word length is 29 characters");
-                e.preventDefault();
+                submit.preventDefault();
             }
         });
     } 
 }
 
-// make sure the created goal has the values of the correct parent
-// eg - the goal it was created under or the main page
-function applyCorrectFormValues(form_children) {
-    goalFocusDict = { "inputBox": form_children[4] , "submitButton": form_children[5] }
-    document.addEventListener('click', () => {
-        checkFocus(goalFocusDict, resetFormValues)
-    })
-}
-
-// when any 'element' is clicked on, perform 'func'
-function addClickEvent(func, element, list) {
-    document.querySelectorAll(element).forEach(
-        ele => ele.addEventListener('click', () => {
-           func(ele, list);
-    })
-)}
 
 /**
  * Add 'event' that calls 'func' to all instances of 'element'
  * @param {string} element HTML elements that will have the event added to them.
  * @param {function} func Callback function to be added to element upon event.
  * @param {string} event String of event.
- * @param {HTMLElement} cont Html container the element is within.
- * @param {Array<Goal>} arr Array of Goals.
+ * @param {Array<Goal>} args Extra args for specifi use cases
  */
-function addEvent(element, func, event, cont, arr) {
+function addEvent(element, func, event, ...args) {
     document.querySelectorAll(element).forEach(
-        e => e.addEventListener(event,  func.bind([cont, arr]) )
+        e => e.addEventListener(event,  func.bind(args) )
     )
 }
 
-    
 
-// reset values of form to refer to the 0'th level
-function resetFormValues(element) {
-    element.children[2].value = "None"; //  parent_id_input
-    element.children[3].value = 0; //  depth_id_input
-}
-
-function checkFocus(elementToCheck, func){
-    if (!document.activeElement in elementToCheck) {
-        func(elementToCheck.inputBox.parentElement); 
-    }
-}
 
 // when item has been 'ticked', make it appear disabled, hide the tick and reveal the delete button
 function disable(element) {
@@ -166,37 +138,12 @@ function disable(element) {
 }
 
 
-
-// change focus to be on text input box 
-// when goal is added, will be added as a sub goal to the clicked goal
-// function prepareToAddGoal(button, form_children) {
-
-//     const parent = button.parentElement.parentElement.parentElement.parentElement;
-//     // console.log("pare: " + parent.classList);
-//     const parent_id = getIntFromId(parent);
-//     const depth_id = getValueFromClass(parent, "depth");
-
-//     // - change form id and depth to necessary values
-//     for (const child of form_children) {
-//         if (child.name == "parent") {
-//             child.setAttribute("value", parent_id);
-//         }
-//         else if (child.name == "depth_id") {
-//             child.setAttribute("value", depth_id);
-//         }
-//         else if (child.name == "new_goal"){
-//             child.focus();  // jump cursor to text input box 
-//         }
-//     }
-// }
-
-
 //when button is clicked on, hide/show all children
-function showHideChildren(button, cont, list) {
+function showHideChildren(button) {
     
     // // console.log(button.previousElementSibling.children[4]);
     // let id = button.previousElementSibling.children[4].id.split('_')[1]; 
-    list = this[1];
+    let list = this[1];
     let id  = button.target.parentElement.value;
     for (const parent of list) {
         const newForm = new FormData();
@@ -206,7 +153,7 @@ function showHideChildren(button, cont, list) {
             "child_id":new Set(),
             "hidden":[]
         }
-        // // console.log(button.previousElementSibling);
+        
         if (id === parent.id) {
             hideElements(parent, parent.children, parent.closed, formDict);
             newForm.append("name", "closeForm");
@@ -225,62 +172,15 @@ function showHideChildren(button, cont, list) {
     }
 }
 
-//store each individual file in a set, eliminating any duplciates
-//1: Adds child to set
-//2: Looks in child's children array
-//3: If the child from the children array is not in set:
-//3a: Change its order value
-//3b: Call the flatten function and go back to step 1, inserting this child into function
-// function flattenChildren(child) {
-//     flattenedChildren.add(child);
-//     for (child of child.children) {
-//         if (!flattenedChildren.has(child)){
-//             //change order of child
-//             child.htmlElemment.style.order = child_order;
-//             child_order++;
-//             flattenChildren(child);         
-//         }    
-//     }       
-// }
-
 
 //recursively hide/show all elements in arr
 function hideElements(parent, arr, closed, formDict) {
 
-
-    closeList = []
-
-
-    // const newForm = new FormData();
-
     for (child of arr) {
 
-        data = {
-            "parent_id": parent.id,
-            "child_id": child.id,
-            "hidden": !closed
-        } 
-
-        // const form = new FormData();
-        // form.append("name", "closeForm");
-
-        // form.append("parent_id", parent.id);
-        formDict["parent_id"].add(parent.id)
-        // console.log(child.id)
-        // form.append("child_id", child.id);
-        // newForm.append("child_id", child.id);
-        formDict["child_id"].add(child.id)
-
-        // form.append("hidden", !closed);
-        formDict["hidden"].push(!closed)
-
-        // form.append("csrfmiddlewaretoken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
-        //// console.log(form);
-
-        // sends instructions to close/open to DB
-        // close(data); 
-        // close(form);
-        // closeList.push(form)
+        formDict["parent_id"].add(parent.id);
+        formDict["child_id"].add(child.id);
+        formDict["hidden"].push(!closed);
 
         if (closed) { // then open
             child.hiddenByParent = false;
@@ -297,41 +197,23 @@ function hideElements(parent, arr, closed, formDict) {
             }  
         } 
     }
-
-    // close(form);
-    // console.log("once")
-    // const newForm = new FormData();
-    // newForm.append("name", "closeForm");
-    // newForm.append("parent_id", formDict["parent_id"]);
-    // // newForm.append("child_id", formDict["child_id"]);
-    // newForm.append("hidden", formDict["hidden"][0]);
-    // newForm.append("csrfmiddlewaretoken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
-    // console.log(formDict["child_id"])
-    // close(newForm);
-
-
 }
 
 // position goal items on the DOM according to their depth
 function alignItem(item, row_number, childCount) {
-    // // console.log(item.children[0].children[0].children[0]);
     // retrieve required item depth
-    // const item_class = item.className;
     let item_depth = getValueFromClass(item, "depth");
-    // let item_depth = parseInt(item_class.split('depth_id_')[1]);
     // align item according to its depth
     item.style.gridColumnStart = item_depth;
     item.style.gridColumnEnd = item_depth+5; 
     item.style.gridRowStart = row_number.value;
     row_number.value++;
-   
 }
 
 function checkIfCompleted(item) {
     const is_completed = getValueFromClass(item, "completed");
     if (is_completed) {
         // disable function starts at tick form, so must bring item to that depth in html tree
-        // disable(item.children[0].children[1].children[0]);
         disable(item.children[0].children[2].children[0]);
     }
 }
