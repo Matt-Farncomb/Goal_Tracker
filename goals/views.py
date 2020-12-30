@@ -9,9 +9,8 @@ from django.contrib.auth.password_validation  import validate_password
 from django.urls import reverse
 # from django.contrib.auth.models import User as DjangoUser
 from django.views import View
-from .forms import GoalForm, DeleteForm, InitialEntryForm, TickForm, LoginForm, RegisterForm, EditForm, max_goal_length, TempGoalForm, CloseForm
+from .forms import *
 from .models import Goal, UserProfile
-# from .helpers import flattenChildren, match_child_with_parent, Goal_Item, get_children, str_to_bool
 import json 
 from .helpers import *
 
@@ -109,31 +108,6 @@ def logout(request):
     }
     return auth(request, context)
 
-# def validate_form(form):
-#     if form.is_valid():
-#         return form.cleaned_data
-
-# def ordered_goals(user_id):
-#     goals_query = Goal.objects.filter(user_id=user_id ).order_by("parent") 
-#     matched_list = match_child_with_parent(goals_query) 
-
-#     flattened_list = []
-    
-#     # get a list of all goals in the order they will be on the DOM
-#     for child in matched_list:   
-#         flattened_list = flattenChildren(child, flattened_list)
-
-#     return flattened_list
-
-# def create_home_context(request, max_goal_length):
-#     context =  {
-#         "username": request.user,
-#         "goals":ordered_goals(request.user.id),
-#         "max_goal_length":max_goal_length
-#     }
-
-#     return context
-
 
 class Home(View):
 
@@ -149,9 +123,7 @@ class Home(View):
 
     def post(self, request):
 
-        # global max_goal_length
         posted_form = request.POST
-        # print(posted_form)
         form_name = posted_form.get('name')
         
         if request.is_ajax():
@@ -175,66 +147,7 @@ class Home(View):
                 process_goal_form(posted_form, context, request, None)
 
             return redirect("home")
-            
-  
-
-
-# def UpdateGoals(request):
-    
-#     def post(self, request):
-#         if request.is_ajax():
-
-
-# def home(request):
-
-#     global max_goal_length
-
-#     if request.method == "GET" and not request.user.is_authenticated:
-#         return redirect(login)
-
-#     elif request.is_ajax() and request.method == "POST":     
-
-#         posted_form = request.POST
-#         form_name = posted_form.get('name')
-
-#         if form_name == "edit-goal":
-#             process_edit_form(posted_form)
-#         if form_name == "closeForm":
-#             process_close_form(posted_form)
-
-#         return HttpResponse(status=204)
-
-#     else:
-
-#         context = create_home_context(request)
-
-#         if request.method == 'GET':
-#             if "scroll" in request.session and request.session["scroll"] != None:
-#                 context["scroll"] = request.session["scroll"]
-#                 request.session["scroll"] = None;
-         
-#         if request.method == 'POST':
-#             #initital values
-#             parent = None
-#             depth_id = 1  
-#             posted_form = request.POST
-#             form_name = posted_form.get('name')
-#             # delete selected item from database
-#             if form_name == "delete":
-#                 process_delete_form(posted_form)
-#             # mark ticked item as complete
-#             elif form_name == "tick":
-#                 process_tick_form(posted_form, request, is_ticked=True)
-#             elif form_name == "un-tick":
-#                 process_tick_form(posted_form, request, is_ticked=False)
-#             elif form_name == "add-temp":
-#                 process_temp_form(posted_form, context, request)
-#             elif form_name == "new-goal":
-#                 process_goal_form(posted_form, context, request, parent)
-
-#             return redirect(home)
-     
-#         return render(request, 'goals/goal.html', context)
+        
 
 # user can request a goal by its id and receive all its info and its children and their info and children
 # NOTE: Must use a backslash at end of api_test

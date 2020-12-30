@@ -9,12 +9,9 @@ class Goal(models.Model):
     completed = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
     hidden = models.BooleanField(default=False)
-    # will need  user id - will only get goals made by signed in user
     user_id = models.IntegerField()
 
 class UserProfile(AbstractUser):
-    # firstname = models.TextField()
-    # lastname = models.TextField()
 
     def __str__(self):
         return(textwrap.dedent(f"""\

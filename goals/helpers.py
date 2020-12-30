@@ -95,22 +95,23 @@ def process_edit_form(posted_form):
     update.save()
 
 def process_close_form(posted_form):
+
+    def update_db(ids, hidden, string):
+        for _id in ids:
+            to_update = Goal.objects.get(id=_id)
+            if string == "parent":
+                to_update.closed = str_to_bool(hidden)
+            else:
+                to_update.hidden = str_to_bool(hidden)
+            to_update.save()
+            
     cleaned = validate_form(CloseForm(posted_form)) 
     child_ids = cleaned.get("child_id").split(",")
     parent_ids = cleaned.get("parent_id").split(",")
     hide = cleaned.get("hidden")
-    print(parent_ids)
-    for e in child_ids:
-        # print(f"hide: {e}")
-        to_hide = Goal.objects.get(id=e)
-        to_hide.hidden = str_to_bool(hide)
-        to_hide.save()
-    for e in parent_ids:
-        # print(f"close: {e}")
-        to_close = Goal.objects.get(id=e)
-        to_close.closed = str_to_bool(hide)
-        to_close.save()
-
+    update_db(child_ids, hide, "child")
+    update_db(parent_ids, hide, "parent")
+  
 
 def process_delete_form(posted_form, request):
     cleaned = validate_form(DeleteForm(posted_form))
@@ -119,7 +120,6 @@ def process_delete_form(posted_form, request):
     xPos = cleaned.get("scrollXpos")
     scroll_pos = { "xPos": xPos, "yPos": yPos }
     request.session["scroll"] = scroll_pos
-    print(scroll_pos)
     Goal.objects.filter(id=unwanted_goal_id).delete()
 
 def process_tick_form(posted_form, request, is_ticked):
