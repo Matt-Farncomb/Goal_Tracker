@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addEvent(".plusForm", addScrollValues, 'submit', cont);
     addEvent(".cross.circle", addScrollValues, 'submit', cont);
     addEvent(".scroll-arrow", scrollAcross, 'click', cont);
-    addEvent(".tick", disable, 'click');
+    // addEvent(".tick", disable, 'click');
     addEvent("#arrow_button", showHideChildren, 'click', cont, goalArr);
     addEvent(".title", countGoal, 'keyup');
     addEvent("#add-goal-input-box", countGoal, 'keyup');
@@ -102,7 +102,7 @@ function validate(submit) {
  * @param {string} element HTML elements that will have the event added to them.
  * @param {function} func Callback function to be added to element upon event.
  * @param {string} event String of event.
- * @param {Array<Goal>} args Extra args for specifi use cases
+ * @param {} args Extra args for specifi use cases
  */
 function addEvent(element, func, event, ...args) {
     document.querySelectorAll(element).forEach(
@@ -112,40 +112,45 @@ function addEvent(element, func, event, ...args) {
 
 
 
-// when item has been 'ticked', make it appear disabled, hide the tick and reveal the delete button
-function disable(element) {
-    if (!element.classList.contains("disabled")) { 
-        // Make text content and add button greyed out
-        // // console.log(element);
-        
-        element.parentElement.parentElement.parentElement.parentElement = "20%";
-        element.parentElement.parentElement.parentElement.disabled = true;
-        element.parentElement.parentElement.parentElement.parentElement = "20%";
-        // element.nextElementSibling.nextElementSibling.style.opacity = "20%";
-        
-        // element.nextElementSibling.nextElementSibling.disabled = true;
-        
-        // element.parentElement.previousElementSibling.style.opacity = "20%";
+/**
+ * When item has been 'ticked', make it appear disabled.
+ * Hide the tick and reveal the delete button
+ * Also hide the plus and reveal the undo button
+ * @param {HTMLElement} tickForm Tick form that was ticked
+ */
+function disable(tickForm) {
+    if (!tickForm.classList.contains("disabled")) { 
+        const buttonCont = tickForm.parentElement;
+        const itemCont = buttonCont.parentElement;
+        const editGoalInput = itemCont.querySelector('[name="new_goal"]');
+        const crossForm = buttonCont.querySelector('[name="crossForm"]');
+        const plusForm = buttonCont.querySelector('[name="plusForm"]');
+        const undoForm = buttonCont.querySelector('[name="undoForm"]');
+
+        editGoalInput.disabled = true
+
         //hide tick and reveal cross
-        // // console.log(`eelement: ${element.nextElementSibling.classList}`)
-        element.hidden = true;
-        element.nextElementSibling.hidden = false;
-        const plus = element.nextElementSibling.nextElementSibling;
-        plus.classList.add("hidden");
-        plus.nextElementSibling.classList.remove("hidden");
-        
+        tickForm.classList.add("hidden");
+        crossForm.classList.remove("hidden");
+        //hide plus and reveal undo
+        plusForm.classList.add("hidden");
+        undoForm.classList.remove("hidden"); 
     } 
 }
 
 
-//when button is clicked on, hide/show all children
-function showHideChildren(button) {
-    
-    // // console.log(button.previousElementSibling.children[4]);
-    // let id = button.previousElementSibling.children[4].id.split('_')[1]; 
-    let list = this[1];
-    let id  = button.target.parentElement.value;
-    for (const parent of list) {
+/**
+ * Show/hide all sub goals of clicked on goal
+ * @param {Event} click click event
+ */
+function showHideChildren(click) {
+
+    const arrowButton = click.target.parentElement;
+    const goalArr = this[1];
+    const clickedOnId  = arrowButton.value;
+
+    for (const goal of goalArr) {
+        
         const newForm = new FormData();
         
         formDict = {
@@ -154,29 +159,35 @@ function showHideChildren(button) {
             "hidden":[]
         }
         
-        if (id === parent.id) {
-            hideElements(parent, parent.children, parent.closed, formDict);
+        if (clickedOnId === goal.id) {
+            hideElements(goal, goal.closed, formDict);
             newForm.append("name", "closeForm");
             newForm.append("parent_id", Array.from(formDict["parent_id"]));
             newForm.append("child_id", Array.from(formDict["child_id"]));
-            newForm.append("hidden", !parent.closed);
+            newForm.append("hidden", !goal.closed);
             newForm.append("csrfmiddlewaretoken", document.getElementsByName('csrfmiddlewaretoken')[0].value)
-            console.log(formDict["child_id"])
-            close(newForm);
+            // send form data to server so server knows which goals are hidden
+            ajaxClose(newForm);
 
-            parent.closed = !parent.closed;
-            
-            allocateArrow(parent);
+            goal.closed = !goal.closed;
+            // allocate either up or down arrow
+            allocateArrow(goal);
            
         }     
     }
 }
 
 
-//recursively hide/show all elements in arr
-function hideElements(parent, arr, closed, formDict) {
+/**
+ * Recursively hide/show all elements in arr
+ * @param {Goal} parent Goal object.
+ * @param {Array<Goal>} children Array of parent's children goals.
+ * @param {string} closed String of event.
+ * @param {object} formDict Extra args for specifi use cases
+ */
+function hideElements(parent, closed, formDict) {
 
-    for (child of arr) {
+    for (child of parent.children) {
 
         formDict["parent_id"].add(parent.id);
         formDict["child_id"].add(child.id);
@@ -186,23 +197,27 @@ function hideElements(parent, arr, closed, formDict) {
             child.hiddenByParent = false;
             child.htmlElemment.style.display = "block";    
             if (!child.closed && child.children.length > 0) {
-                hideElements(child, child.children, true, formDict )       
+                hideElements(child, true, formDict )       
             } 
         }
         else { // then close all elemnts and their subs;
             child.hiddenByParent = true;
             child.htmlElemment.style.display = "none";
             if (child.children.length > 0) { 
-                hideElements(child, child.children, false, formDict );
+                hideElements(child, false, formDict );
             }  
         } 
     }
 }
 
-// position goal items on the DOM according to their depth
-function alignItem(item, row_number, childCount) {
+/**
+ * Position goal items on the DOM according to their depth
+ * @param {HTMLElement} item HTML element of item.
+ * @param {number} row_number The row number of this item in the DOM.
+ */
+function alignItem(item, row_number) {
     // retrieve required item depth
-    let item_depth = getValueFromClass(item, "depth");
+    const item_depth = getValueFromClass(item, "depth");
     // align item according to its depth
     item.style.gridColumnStart = item_depth;
     item.style.gridColumnEnd = item_depth+5; 
@@ -210,17 +225,31 @@ function alignItem(item, row_number, childCount) {
     row_number.value++;
 }
 
-function checkIfCompleted(item) {
-    const is_completed = getValueFromClass(item, "completed");
+/**
+ * If this item has been ticked, it means it has been completed to disable it
+ * @param {HTMLElement} insertedGoal HTML Element of insertedGoal
+ */
+function checkIfCompleted(insertedGoal) {
+    const is_completed = getValueFromClass(insertedGoal, "completed");
     if (is_completed) {
-        // disable function starts at tick form, so must bring item to that depth in html tree
-        disable(item.children[0].children[2].children[0]);
+        const tickForm = insertedGoal.querySelector('[name="tickForm"]');
+        disable(tickForm);
     }
 }
 
-// returs the db value at the end of any class (bools, ints etc)
+/**
+ * Returns the value at the end of any class (bools, ints etc)
+ * @param {HTMLElement} item HTML Element of item
+ * @param {string} string Value requested: parent, depth or id
+ * @returns {(string|boolean)} The value of the string in item
+ */
 function getValueFromClass(item, string) {
 
+    /**
+     * Returns the id from the end of a class name
+     * @param {string} string Value requested
+     * @returns {(string|boolean)} The id at the end of class named string
+     */
     function getIdFromClassName(string) {
         const split = item.className.split(/\s+/);
         for (var e of split) {
@@ -238,10 +267,14 @@ function getValueFromClass(item, string) {
     }  
 }
 
-// build up a list of goals and their children
-// the list is used to know which child belongs to which parent
-// so that when one is closed, it will close the children in the tree
-function buildGoalList(htmlElement, list) {
+
+/**
+ * Build up a list of goals and their children
+ * Array is used to know which child belongs to which parent
+ * @param {HTMLElement} htmlElement
+ * @param {Array} goalArr Array of all goals
+ */
+function buildGoalList(htmlElement, goalArr) {
 
     const id = getIntFromId(htmlElement)
     const parentId = getValueFromClass(htmlElement, "parent");
@@ -250,38 +283,43 @@ function buildGoalList(htmlElement, list) {
 
     let new_goal = new Goal(id, parentId, is_closed, is_hidden, htmlElement)
 
-    list.push(new_goal) 
+    goalArr.push(new_goal) 
 }
 
+/**
+ * Allocate down arrow if closed, else up arrow
+ * @param {Goal} goal instance of class goal that will have its arrow changed
+ */
 function allocateArrow(goal) {
-    // let span = goal.getSpan();
-    // span.firstElementChild.className = goal.closed ? "fas fa-arrow-down" : "fas fa-arrow-up";
-    let arrow = goal.htmlElemment.children[0].children[1].children[0];
-    // // console.log(arrow);
+    const itemContainer = goal.htmlElemment.firstElementChild;
+    const arrowButton = itemContainer.children[1];
+    const arrow = arrowButton.firstElementChild;
     arrow.className = goal.closed ? "fas fa-arrow-down" : "fas fa-arrow-up";
 }
 
 
-
-function organiseDOM(list) {
+/**
+ * Organise all the goals in the correct order and the correct depth
+ * @param {HTMLElement[]} arr array of inserted goals
+ */
+function organiseDOM(arr) {
     
-    const items = document.querySelectorAll('.item'); // each individual item
+    const items = document.querySelectorAll('.item'); 
     let row_number = { "value": 1 };
     let childCount = 0;
-
+    
     // align items in DOM according to their depth and organise into a list
     for (const item of items) {
-        alignItem(item, row_number, childCount);
+        alignItem(item, row_number);
         checkIfCompleted(item);
-        // checkIfClosed(item);
-        buildGoalList(item, list);
+        buildGoalList(item, arr);
         childCount++;
     }
 
     // add children to to children array of correct parent
-    for (parent of list) {
+    for (parent of arr) {
 
-        for (child of list) {
+        for (child of arr) {
             if (parent.id === child.parentId) {
                 parent.addChild(child);  
             }
@@ -292,32 +330,20 @@ function organiseDOM(list) {
         allocateArrow(parent);
     }   
 
-    for (e of list) {
-        // e.getSpan().innerHTML += "  " + e.numberOfChildren();
-        let span = e.htmlElemment.children[0].children[1].children[1];
-        // // console.log("span is:" + span.innerHTML);
-        span.innerHTML += "  " + e.numberOfChildren();
-
-        
+    // update span with number of sub goals for each goal
+    for (e of arr) {
+        const itemCont = e.htmlElemment.firstElementChild;
+        const arrowButton = itemCont.children[1];
+        const span = arrowButton.children[1];
+        span.innerHTML += "  " + e.numberOfChildren();  
     }
 }
 
-
-function flatteGoals(child_arr, children) {
-    for (var child of children) {
-        child_arr.push(child.id);
-        flatteGoals(child_arr, child.children);
-    } 
-    return child_arr;
-}
-
-function close(form) {
-
-    // const serializedFrom = $(form).serialize();
-    // // console.log(serializedFrom);
-    // $.post("", form);
-    
-
+/**
+ * Post form data to server showing what items are now hidden
+ * @param {FormData} form form data for goal
+ */
+function ajaxClose(form) {
     $.ajax({
         type: "POST",
         url: "",
@@ -325,27 +351,17 @@ function close(form) {
         processData: false,
         contentType: false
       });
-
-     
-
-
-    //todo: Sue $.post() and send as FormData
-    // $.ajax({
-    //     url:'',
-    //     type:'POST',
-    //     data: { 
-    //         "data": JSON.stringify(data),
-    //         csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value },
-    //     dataType: 'json'
-    // })
 }
 
-// Post form data to server and remove focus frosm form
-function postEdit(e) {
+/**
+ * Post edited goal form data to server
+ * @param {Event} submit submit event called on editing goal
+ */
+function postEdit(submit) {
    
-    let form = e.target;
-    e.preventDefault();
-    e.target.elements["new_goal"].blur();
+    let form = submit.target;
+    submit.preventDefault();
+    submit.target.elements["new_goal"].blur();
 
     // creates a text string in standard URL-encoded notation of the form values
     const serializedFrom = $(form).serialize();

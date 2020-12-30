@@ -45,7 +45,7 @@
                     {% comment %} <button id="id_{{ e.id }}" class="btn btn-outline-secondary title-btn  title">{{ e.content }} <span> <i class="fas"> </i></span> </button>  {% endcomment %}
                     <button id="arrow_button" class="btn" value="{{e.id}}"><i></i><span></span></button>
                     <div class="button-container">  
-                        <form method="POST" class="tick circle plusForm">
+                        <form method="POST" name="tickForm" class="tick circle plusForm">
                             {% csrf_token %} 
                             <input type="hidden" name="name" value="tick">
                             <input type="number" name="scrollYpos" value="1" hidden> 
@@ -54,7 +54,7 @@
                                 <input type="number" name="tick" value="{{ e.id }}" hidden><i id="" class="fas fa-check"></i></input> 
                             </button> 
                         </form>   
-                        <form method="POST" class="cross circle" hidden>
+                        <form method="POST" name="crossForm" class="cross circle hidden">
                             {% csrf_token %} 
                             <input class="delete-input" type="hidden" name="name" value="delete">
                             <button id="delete-button" type="submit" value="Submit" class="btn btn-outline-danger circle" >
@@ -72,7 +72,7 @@
                             <input class="depth_id_input" type="number" name="depth_id" value="{{ e.depth_id }}" hidden>   
                             <button type="submit" class="plus btn btn-outline-secondary plus circle"><i class="fas fa-plus"></i></button> <!-- Add a new goal below, slightly indented, as input field -->
                         </form>
-                        <form method="POST" name="" class="plusForm hidden">
+                        <form method="POST" name="undoForm" class="plusForm hidden">
                             {% csrf_token %} 
                             <input type="hidden" name="name" value="un-tick">
                             <input type="number" name="scrollYpos" value="1" hidden> 

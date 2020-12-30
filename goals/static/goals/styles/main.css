@@ -95,8 +95,9 @@ li {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
+
 
 .button-container {
     grid-column-start:1;
